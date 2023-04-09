@@ -16,8 +16,15 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    database: postgresql
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      enabled: true
+      max-file-size: 10MB
+      location: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images
 
 
 
@@ -26,9 +33,12 @@ spring:
       client:
         registration:
           github:
-            clientId: github-client-id
-            clientSecret: github-client-secret
+            clientId: 7f1381291e01e550af47
+            clientSecret: 0ddafd23c14c4b73b91ea82fd15f06ab4d6a977c
 
           google:
             client-id: google-client-id
             client-secret: google-client-secret
+
+
+airbnb.upload.path: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images

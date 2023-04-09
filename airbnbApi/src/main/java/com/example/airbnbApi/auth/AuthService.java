@@ -5,13 +5,18 @@ import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.user.Role;
 import com.example.airbnbApi.user.User;
 import com.example.airbnbApi.user.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +26,7 @@ public class AuthService   {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         var user = Account.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -29,9 +34,30 @@ public class AuthService   {
                 .role(Role.MEMBER)
                 .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(new User(user));
+
+    }
+
+
+
+    public AuthResponse authenticate(AuthRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        Account account = userRepository.findByEmail(request.getEmail())
+                .orElseThrow();
+        var jwtToken = jwtService.generateToken(new User(account));
+        Map<String,String> currentUser = new HashMap<>();
+        currentUser.put("id",account.getId().toString());
+        currentUser.put("name",account.getName());
+        currentUser.put("email",account.getEmail());
+
+
         return AuthResponse.builder()
                 .token(jwtToken)
+                .user(currentUser)
                 .build();
     }
 }
