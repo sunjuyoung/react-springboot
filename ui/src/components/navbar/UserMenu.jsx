@@ -6,7 +6,8 @@ import Avatar from "../Avatar";
 
 import { useNavigate } from "react-router-dom";
 
-const UserMenu = () => {
+const UserMenu = ({ user }) => {
+  console.log(user);
   const [isOpen, setIsOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const UserMenu = () => {
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <div className="hidden px-4 py-3 text-sm font-semibold transition rounded-full cursor-pointer md:block hover:bg-neutral-100">
-          Airbnb your home
+          Airbnb your home {user?.email}
         </div>
         <div
           onClick={toggleOpen}

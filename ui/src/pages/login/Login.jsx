@@ -9,10 +9,16 @@ import Button from "../../components/Button";
 import Heading from "../../components/Heading";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import newRequest from "../../utils/newRequest";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../state/index";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -23,6 +29,21 @@ const Login = () => {
       password: "",
     },
   });
+
+  const onSubmit = async (data) => {
+    const res = await newRequest.post("/auth/authenticate", {
+      email: data.email,
+      password: data.password,
+    });
+    dispatch(
+      setLogin({
+        user: res.data.user,
+        token: res.data.token,
+      })
+    );
+
+    console.log(res.data);
+  };
 
   return (
     <div className="flex flex-col w-full h-full bg-white border-0 rounded-lg shadow-lg p-7 lg:h-auto md:h-auto">
@@ -66,11 +87,7 @@ const Login = () => {
       {/*footer*/}
       <div className="flex flex-col gap-2 p-6">
         <div className="flex flex-row items-center w-full gap-4 ">
-          <Button
-            disabled={true}
-            label="Continue"
-            // onClick={handleSubmit}
-          />
+          <Button label="Continue" onClick={handleSubmit(onSubmit)} />
         </div>
         {/* {footer} */}
 

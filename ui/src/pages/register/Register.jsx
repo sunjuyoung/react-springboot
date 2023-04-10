@@ -9,6 +9,8 @@ import Button from "../../components/Button";
 import Heading from "../../components/Heading";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import newRequest from "../../utils/newRequest";
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,8 +23,26 @@ const Register = () => {
     defaultValues: {
       email: "",
       password: "",
+      name: "",
     },
   });
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await newRequest.post("/auth/register", {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
+      if (res.data === "success") {
+        toast.success("Registered!");
+        navigate("/login");
+      }
+    } catch (error) {
+      alert(error.response.data.defaultMessage);
+      toast.error(error);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full bg-white border-0 rounded-lg shadow-lg p-7 lg:h-auto md:h-auto">
@@ -76,11 +96,7 @@ const Register = () => {
       {/*footer*/}
       <div className="flex flex-col gap-2 p-6">
         <div className="flex flex-row items-center w-full gap-4 ">
-          <Button
-            disabled={true}
-            label="Continue"
-            // onClick={handleSubmit}
-          />
+          <Button label="Continue" onClick={handleSubmit(onSubmit)} />
         </div>
         {/* {footer} */}
 

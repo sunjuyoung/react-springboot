@@ -3,8 +3,11 @@ import Logo from "./Logo";
 import Container from "../Container";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const user = useSelector((state) => state.user);
+
   return (
     <div className="fixed z-10 w-full bg-white shadow-sm">
       <div
@@ -17,7 +20,7 @@ const Navbar = () => {
           <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
             <Logo />
             <Search />
-            <UserMenu />
+            <UserMenu user={user} />
           </div>
         </Container>
       </div>
