@@ -28,17 +28,17 @@ spring:
 
 
 
-  security:
-    oauth2:
-      client:
-        registration:
-          github:
-            clientId: 7f1381291e01e550af47
-            clientSecret: 0ddafd23c14c4b73b91ea82fd15f06ab4d6a977c
-
-          google:
-            client-id: google-client-id
-            client-secret: google-client-secret
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            clientId:
+#            clientSecret:
+#
+#          google:
+#            client-id:
+#            client-secret:
 
 
 airbnb.upload.path: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images

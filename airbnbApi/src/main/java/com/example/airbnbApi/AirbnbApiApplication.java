@@ -18,14 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AirbnbApiApplication {
 
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(AirbnbApiApplication.class, args);
 	}
-
-
-
-
 
 
 }

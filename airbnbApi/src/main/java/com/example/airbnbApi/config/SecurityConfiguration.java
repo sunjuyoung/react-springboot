@@ -34,14 +34,16 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http
-
                 .csrf().disable()
-                .cors().disable()
+                .cors(httpSecurityCorsConfigurer -> {
+                    httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
+                })
 
                 .authorizeHttpRequests()
+
                 .requestMatchers(HttpMethod.POST,"/image/upload")
                 .permitAll()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers(HttpMethod.POST,"/api/v1/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -49,29 +51,18 @@ public class SecurityConfiguration {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 
                 http
-
                         .oauth2Login()
                         .authorizationEndpoint()
                         .baseUri("/login")
-
                         .and()
-
                         .successHandler(authenticationSuccessHandler())
-
-
                         .userInfoEndpoint().userService(customOAuthUserService)
-
                         ;
-
-
-
-
 
         return http.build();
     }

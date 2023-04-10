@@ -26,7 +26,6 @@ public class CustomSocialLoginSuccessHandler implements AuthenticationSuccessHan
         log.info(oAuth2User.getAttributes().get("email"));
         log.info(oAuth2User.getAttributes().get("given_name"));
 
-        response.sendRedirect("/");
 
 
     }
