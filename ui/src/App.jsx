@@ -5,6 +5,7 @@ import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Home from "./pages/home";
 import { defaultFormat } from "moment/moment";
+import ListingForm from "./pages/listing/ListingForm";
 
 function App() {
   const Layout = () => {
@@ -32,6 +33,10 @@ function App() {
         {
           path: "/login",
           element: <Login />,
+        },
+        {
+          path: "/listingForm",
+          element: <ListingForm />,
         },
       ],
     },
