@@ -38,4 +38,11 @@ public class Review extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable =false)
     private Listing listing;
+
+    public void setListing(Listing listing){
+        this.listing = listing;
+        listing.getReviews().add(this);
+    }
+
+
 }

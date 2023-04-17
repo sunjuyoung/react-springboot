@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.util.Arrays;
 
@@ -39,8 +40,14 @@ public class SecurityConfiguration {
                     httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
                 })
 
+
+
                 .authorizeHttpRequests()
 
+
+
+                .requestMatchers(HttpMethod.GET,"/swagger-ui/**")
+                .permitAll()
                 .requestMatchers(HttpMethod.POST,"/image/upload")
                 .permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/v1/auth/**")
@@ -48,6 +55,7 @@ public class SecurityConfiguration {
                 .anyRequest()
                 .authenticated()
                 .and()
+
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -55,14 +63,14 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 
-                http
-                        .oauth2Login()
-                        .authorizationEndpoint()
-                        .baseUri("/login")
-                        .and()
-                        .successHandler(authenticationSuccessHandler())
-                        .userInfoEndpoint().userService(customOAuthUserService)
-                        ;
+//                http
+//                        .oauth2Login()
+//                        .authorizationEndpoint()
+//                        .baseUri("/login")
+//                        .and()
+//                        .successHandler(authenticationSuccessHandler())
+//                        .userInfoEndpoint().userService(customOAuthUserService)
+//                        ;
 
         return http.build();
     }
@@ -71,7 +79,8 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer webSecurityCustomizer(){
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .and();
+                .and()
+                ;
     }
 
     @Bean
@@ -86,6 +95,8 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
         return source;
     }
+
+
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler(){

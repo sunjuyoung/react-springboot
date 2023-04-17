@@ -25,9 +25,11 @@ public class Reservation extends BaseTime {
     private Integer id;
 
     @Column(nullable = false)
+    @Temporal(value = TemporalType.DATE)
     private LocalDate checkInDate;
 
     @Column(nullable = false)
+    @Temporal(value = TemporalType.DATE)
     private LocalDate checkOutDate;
 
     @Column(nullable = false)
@@ -58,4 +60,8 @@ public class Reservation extends BaseTime {
 //        }
 //        return true;
 //    }
+
+
+
+
 }

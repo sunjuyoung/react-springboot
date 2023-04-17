@@ -1,8 +1,10 @@
 package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.category.Category;
+import com.example.airbnbApi.category.CategoryListing;
 import com.example.airbnbApi.common.BaseTime;
 import com.example.airbnbApi.common.Photo;
+import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.review.Review;
 import com.example.airbnbApi.user.Account;
 import jakarta.persistence.*;
@@ -28,34 +30,32 @@ public class Listing extends BaseTime {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     @Column(nullable = false)
-    private String address;
+    private String locationValue;
 
     @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
-    private Integer maxGuests;
+    private Integer guestCount;
 
     @Column(nullable = false)
     private String description;
 
-
-
+    @Column(nullable = false)
     private int roomCount;
+
+    @Column(nullable = false)
     private int bathroomCount;
-    private int guestCount;
-    private String locationValue;
+
+
 
     @OneToMany(mappedBy = "listing")
     private List<Review> reviews;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "listing_category",
-            joinColumns = @JoinColumn(name = "listing_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @ManyToMany(mappedBy = "listings")
     private Set<Category> categories = new HashSet<>();
 
 
@@ -66,5 +66,26 @@ public class Listing extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account host;
+
+
+
+    /**
+     * 생성메서드
+     */
+    public static Listing createListing(Account account, RegisterListingDTO dto, Category category){
+        Listing listing = Listing.builder()
+                .description(dto.getDescription())
+                .title(dto.getTitle())
+                .price(dto.getPrice())
+                .bathroomCount(dto.getBathroomCount())
+                .guestCount(dto.getGuestCount())
+                .roomCount(dto.getRoomCount())
+                .host(account)
+                .categories(Set.of(category))
+                .build();
+        return listing;
+    }
+
+
 
 }
