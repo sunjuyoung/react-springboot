@@ -4,6 +4,8 @@ import Navbar from "./components/navbar/Navbar";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Home from "./pages/home";
+
+import { Toaster } from "react-hot-toast";
 import { defaultFormat } from "moment/moment";
 import ListingForm from "./pages/listing/ListingForm";
 
@@ -13,6 +15,7 @@ function App() {
       <div className="app">
         <Navbar />
         <Outlet />
+        <Toaster />
       </div>
     );
   };

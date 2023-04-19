@@ -14,7 +14,13 @@ import Counter from "../../components/inputs/Counter";
 import ImageUpload from "../../components/inputs/ImageUpload";
 
 import Button from "../../components/Button";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import newRequest from "../../utils/newRequest";
+import { useSelector } from "react-redux";
 const ListingForm = () => {
+  const token = useSelector((state) => state?.token);
+  const user = useSelector((state) => state?.user);
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -36,6 +42,22 @@ const ListingForm = () => {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: (listing) => {
+      return newRequest.post("/listing", listing, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["listings"]);
+    },
+  });
+
+  const listingSubmit = (data) => {
+    console.log(data);
+    mutation.mutate({ ...data, location: location.label, email: user.email });
+  };
+
   const category = watch("category");
   const location = watch("location");
   const guestCount = watch("guestCount");
@@ -52,15 +74,11 @@ const ListingForm = () => {
   };
 
   return (
-    <div className="flex items-center justify-center ">
+    <div className="flex items-center justify-center">
       <div className="relative w-full mx-auto my-6 lg:w-4/6 xl:w-3/5 md:h-auto">
-        <h1>hi</h1>
         {/* category */}
 
-        <Heading
-          title="Which of these best describes your place?"
-          subtitle="Pick a category"
-        />
+        <Heading title="카테고리" subtitle="Pick a category" />
         <div
           className="
         grid 
@@ -90,11 +108,8 @@ const ListingForm = () => {
 
         {/* Map */}
 
-        <div className="flex flex-col gap-8">
-          <Heading
-            title="Where is your place located?"
-            subtitle="Help guests find you!"
-          />
+        <div className="flex flex-col gap-8 mt-4">
+          <Heading title="위치" subtitle="Help guests find you!" />
           <CountrySelect
             value={location}
             onChange={(value) => setCustomValue("location", value)}
@@ -102,32 +117,32 @@ const ListingForm = () => {
 
           <Map center={location?.latlng} />
         </div>
-
+        {/* 기본옵션 */}
         <hr />
         <div className="flex flex-col gap-8 mt-6">
-          <Heading title="기본 정보" subtitle="What amenitis do you have?" />
+          <Heading title="기본 옵션" subtitle="What amenitis do you have?" />
           <Counter
             onChange={(value) => setCustomValue("guestCount", value)}
             value={guestCount}
-            title="Guests"
+            title="총인원"
             subtitle="How many guests do you allow?"
           />
           <hr />
           <Counter
             onChange={(value) => setCustomValue("roomCount", value)}
             value={roomCount}
-            title="Rooms"
+            title="방 개수"
             subtitle="How many rooms do you have?"
           />
           <hr />
           <Counter
             onChange={(value) => setCustomValue("bathroomCount", value)}
             value={bathroomCount}
-            title="Bathrooms"
+            title="욕실"
             subtitle="How many bathrooms do you have?"
           />
         </div>
-
+        {/* 사진 */}
         <div className="flex flex-col gap-8 mt-6">
           <hr />
           <Heading
@@ -139,7 +154,7 @@ const ListingForm = () => {
             value={imageSrc}
           />
         </div>
-
+        {/* 타이틀 */}
         <div className="flex flex-col gap-8 mt-7">
           <Heading title="설명" subtitle="Short and sweet works best!" />
           <Input
@@ -158,7 +173,7 @@ const ListingForm = () => {
             required
           />
         </div>
-
+        {/* 가격 */}
         <div className="flex flex-col gap-8 mt-4">
           <Heading title="가격" subtitle="How much do you charge per night?" />
           <Input
@@ -174,7 +189,11 @@ const ListingForm = () => {
 
         <div className="flex flex-col gap-2 p-6">
           <div className="flex flex-row items-center w-full gap-4 ">
-            <Button label={"저장"} onClick={() => {}} outline />
+            <Button
+              label={"저장"}
+              onClick={handleSubmit(listingSubmit)}
+              outline
+            />
 
             <Button label={"취소"} onClick={handleSubmit} />
           </div>

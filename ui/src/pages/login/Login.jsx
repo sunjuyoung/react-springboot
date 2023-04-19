@@ -42,7 +42,8 @@ const Login = () => {
       })
     );
 
-    console.log(res.data);
+    toast.success("로그인 성공");
+    navigate("/");
   };
 
   return (

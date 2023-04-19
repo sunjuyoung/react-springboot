@@ -6,10 +6,10 @@ import UserMenu from "./UserMenu";
 import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state?.user);
 
   return (
-    <div className="fixed z-10 w-full bg-white shadow-sm">
+    <div className="z-10 w-full mb-4 bg-white shadow-sm ">
       <div
         className="
           py-4 

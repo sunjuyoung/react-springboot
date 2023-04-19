@@ -1,4 +1,4 @@
-import { BiDollar } from "react-icons/bi";
+import { BiWon } from "react-icons/bi";
 
 const Input = ({
   id,
@@ -13,10 +13,7 @@ const Input = ({
   return (
     <div className="relative w-full">
       {formatPrice && (
-        <BiDollar
-          size={24}
-          className="absolute text-neutral-700 top-5 left-2"
-        />
+        <BiWon size={24} className="absolute text-neutral-700 top-5 left-2" />
       )}
       <input
         id={id}

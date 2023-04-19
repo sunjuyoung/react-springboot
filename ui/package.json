@@ -28,10 +28,10 @@
     "react-image": "^4.1.0",
     "react-images-upload": "^1.2.8",
     "react-leaflet": "^4.2.1",
-    "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
     "react-select": "^5.7.2",
+    "react-toastify": "^9.1.2",
     "redux-persist": "^6.0.0",
     "world-countries": "^4.0.0",
     "zustand": "^4.3.7"
