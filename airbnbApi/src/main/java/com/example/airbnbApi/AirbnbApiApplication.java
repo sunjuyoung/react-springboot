@@ -1,6 +1,9 @@
 package com.example.airbnbApi;
 
 
+import com.example.airbnbApi.auth.AuthRequest;
+import com.example.airbnbApi.auth.AuthService;
+import com.example.airbnbApi.auth.RegisterRequest;
 import com.example.airbnbApi.auth.provider.OAuthUser;
 import com.example.airbnbApi.category.CategoryService;
 import lombok.extern.log4j.Log4j2;
@@ -28,9 +31,11 @@ public class AirbnbApiApplication {
 
 
 	@Bean
-	ApplicationRunner applicationRunner(CategoryService categoryService){
+	ApplicationRunner applicationRunner(CategoryService categoryService, AuthService authService){
 		return args -> {
 			categoryService.createCategory();
+			authService.register(new RegisterRequest("test@test.com","test1","1234"));
+			authService.authenticate(new AuthRequest("test@test.com","1234"));
 		};
 	}
 

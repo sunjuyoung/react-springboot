@@ -27,6 +27,7 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "listing_category",
             joinColumns = @JoinColumn(name = "category_id"),

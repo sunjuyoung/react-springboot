@@ -7,6 +7,7 @@ import com.example.airbnbApi.user.User;
 import com.example.airbnbApi.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class AuthService   {
@@ -55,6 +57,7 @@ public class AuthService   {
         currentUser.put("email",account.getEmail());
 
 
+        log.info(jwtToken);
         return AuthResponse.builder()
                 .token(jwtToken)
                 .user(currentUser)

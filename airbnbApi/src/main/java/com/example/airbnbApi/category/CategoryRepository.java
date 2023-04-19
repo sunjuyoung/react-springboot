@@ -7,9 +7,10 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category,Integer> {
 
-//    @EntityGraph(attributePaths = {"parent","children"})
+   @EntityGraph(attributePaths = {"listings"})
     List<Category> findAll();
 
+    @EntityGraph(attributePaths = {"listings"})
     Category findByName(String name);
 
 

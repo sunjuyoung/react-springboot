@@ -15,7 +15,7 @@ public class RegisterListingDTO {
 
     private String title;
 
-    private String locationValue;
+    private String location;
 
     private int price;
 

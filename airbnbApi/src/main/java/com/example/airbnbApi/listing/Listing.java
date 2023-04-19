@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class Listing extends BaseTime {
     private String title;
 
     @Column(nullable = false)
-    private String locationValue;
+    private String location;
 
     @Column(nullable = false)
     private int price;
@@ -55,17 +56,19 @@ public class Listing extends BaseTime {
     @OneToMany(mappedBy = "listing")
     private List<Review> reviews;
 
+    @Builder.Default
     @ManyToMany(mappedBy = "listings")
     private Set<Category> categories = new HashSet<>();
 
 
-
+    @Builder.Default
     @OneToMany
-    private List<Photo> photos;
+    private List<Photo> photos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account host;
+
 
 
 
@@ -77,14 +80,18 @@ public class Listing extends BaseTime {
                 .description(dto.getDescription())
                 .title(dto.getTitle())
                 .price(dto.getPrice())
+                .location(dto.getLocation())
                 .bathroomCount(dto.getBathroomCount())
                 .guestCount(dto.getGuestCount())
                 .roomCount(dto.getRoomCount())
                 .host(account)
                 .categories(Set.of(category))
                 .build();
+        category.getListings().add(listing);
+
         return listing;
     }
+
 
 
 
