@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CategoryInput from "../../components/inputs/CategoryInput";
 import { categories } from "../../components/navbar/Categories";
 import Heading from "../../components/Heading";
@@ -12,15 +12,21 @@ import { useEffect } from "react";
 import Map from "../../components/Map";
 import Counter from "../../components/inputs/Counter";
 import ImageUpload from "../../components/inputs/ImageUpload";
-
 import Button from "../../components/Button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+
 const ListingForm = () => {
   const token = useSelector((state) => state?.token);
   const user = useSelector((state) => state?.user);
+  const [image, setImage] = useState(null);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [imagePreview, setImagePreview] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -35,12 +41,18 @@ const ListingForm = () => {
       guestCount: 1,
       roomCount: 1,
       bathroomCount: 1,
-      imageSrc: "",
+      imageSrc: null,
       price: 1,
       title: "",
       description: "",
     },
   });
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
 
   const mutation = useMutation({
     mutationFn: (listing) => {
@@ -50,12 +62,38 @@ const ListingForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["listings"]);
+      toast.success("Listing save sucess");
+      navigate("/");
     },
   });
 
-  const listingSubmit = (data) => {
-    console.log(data);
-    mutation.mutate({ ...data, location: location.label, email: user.email });
+  const saveImage = async () => {
+    const formData = new FormData();
+    formData.append("file", image);
+
+    const savedUserImageResponse = await axios.post(
+      "http://localhost:8081/image/upload",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return savedUserImageResponse;
+  };
+
+  const listingSubmit = async (data) => {
+    console.log(data.imageSrc);
+
+    const result = await saveImage();
+
+    mutation.mutate({
+      ...data,
+      location: location.label,
+      email: user.email,
+      imgPath: result.data,
+    });
   };
 
   const category = watch("category");
@@ -71,6 +109,21 @@ const ListingForm = () => {
       shouldTouch: true,
       shouldValidate: true,
     });
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setImage(event.target.files[0]);
+    if (!file) {
+      setImagePreview(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      onChange(file);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -149,10 +202,24 @@ const ListingForm = () => {
             title="사진"
             subtitle="Show guests what your place looks like!"
           />
-          <ImageUpload
-            onChange={(value) => setCustomValue("imageSrc", value)}
-            value={imageSrc}
+          {imagePreview && (
+            <div className="w-full h-full ">
+              <img
+                src={imagePreview}
+                alt="Selected"
+                className="preview-image"
+              />
+            </div>
+          )}
+          <label htmlFor="image-input">Select an image:</label>
+          <input
+            type="file"
+            id="image-input"
+            accept="image/*"
+            onChange={handleImageChange}
           />
+
+          {/* <ImageUpload onChange={(value) => setImage(value)} value={imageSrc} /> */}
         </div>
         {/* 타이틀 */}
         <div className="flex flex-col gap-8 mt-7">

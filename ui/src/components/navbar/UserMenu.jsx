@@ -5,16 +5,26 @@ import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../Avatar";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogout } from "../../state";
+import { toast } from "react-hot-toast";
 
 const UserMenu = ({ user }) => {
-  console.log(user);
   const [isOpen, setIsOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
+
+  const logoutHandle = () => {
+    dispatch(setLogout());
+    toast.error("Logout");
+    navigate("/");
+  };
 
   return (
     <div className="relative">
@@ -50,6 +60,7 @@ const UserMenu = ({ user }) => {
         <div
           className="
             absolute 
+            z-10
             rounded-xl 
             shadow-md
             w-[40vw]
@@ -62,7 +73,7 @@ const UserMenu = ({ user }) => {
           "
         >
           <div className="flex flex-col cursor-pointer">
-            {/* {currentUser ? (
+            {user ? (
               <>
                 <MenuItem label="My trips" onClick={() => {}} />
                 <MenuItem label="My favorites" onClick={() => {}} />
@@ -70,14 +81,17 @@ const UserMenu = ({ user }) => {
                 <MenuItem label="My properties" onClick={() => {}} />
                 <MenuItem label="Airbnb your home" onClick={() => {}} />
                 <hr />
-                <MenuItem label="Logout" onClick={() => {}} />
+                <MenuItem label="Logout" onClick={() => logoutHandle()} />
               </>
-            ) : ( */}
-            <>
-              <MenuItem label="Login" onClick={() => navigate("/login")} />
-              <MenuItem label="Sign up" onClick={() => navigate("/register")} />
-            </>
-            {/* )} */}
+            ) : (
+              <>
+                <MenuItem label="Login" onClick={() => navigate("/login")} />
+                <MenuItem
+                  label="Sign up"
+                  onClick={() => navigate("/register")}
+                />
+              </>
+            )}
           </div>
         </div>
       )}
