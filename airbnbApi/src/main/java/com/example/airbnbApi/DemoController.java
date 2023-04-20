@@ -1,12 +1,16 @@
 package com.example.airbnbApi;
 
+import com.example.airbnbApi.common.Photo;
+import com.example.airbnbApi.common.PhotoRepository;
 import com.example.airbnbApi.common.PhotoService;
+import com.example.airbnbApi.common.UploadResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,25 +53,28 @@ public class DemoController {
 
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> upload(uploadDTO uploadDTO){
+    public ResponseEntity<?> upload(MultipartFile file){
 
-        if(uploadDTO.files() != null){
-            List<uploadResponse> list = new ArrayList<>();
-            uploadDTO.files().forEach(multiFile->{
-                String originalName = multiFile.getOriginalFilename();
+        if(file != null){
+            //List<uploadResponse> list = new ArrayList<>();
+//            uploadDTO.files().forEach(multiFile->{
+                String originalName = file.getOriginalFilename();
                 String uuid = UUID.randomUUID().toString();
                 Path savePath = Paths.get(uploadPath, uuid+"_"+ originalName);
 
                 try {
-                    multiFile.transferTo(savePath);
+                    file.transferTo(savePath);
 
                 }catch (IOException e){
 
                 }
-                list.add(new uploadResponse(uuid,originalName));
+                //list.add(new uploadResponse(uuid,originalName));
+                uploadResponse uploadImage = new uploadResponse(uuid,originalName);
+                Photo photo = new Photo(uploadImage.getLink());
 
-            });
-            return ResponseEntity.ok().body(list);
+
+//            });
+            return ResponseEntity.ok().body(uploadImage.getLink());
         }
 
         return null;

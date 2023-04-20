@@ -3,6 +3,7 @@ package com.example.airbnbApi.listing;
 import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.category.CategoryListing;
 import com.example.airbnbApi.common.BaseTime;
+import com.example.airbnbApi.common.Images;
 import com.example.airbnbApi.common.Photo;
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.review.Review;
@@ -61,13 +62,16 @@ public class Listing extends BaseTime {
     private Set<Category> categories = new HashSet<>();
 
 
+
     @Builder.Default
-    @OneToMany
-    private List<Photo> photos = new ArrayList<>();
+    @OneToMany(mappedBy = "listing", cascade = {CascadeType.ALL})
+    private Set<Photo> images = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account host;
+
+
 
 
 
@@ -88,6 +92,7 @@ public class Listing extends BaseTime {
                 .categories(Set.of(category))
                 .build();
         category.getListings().add(listing);
+
 
         return listing;
     }

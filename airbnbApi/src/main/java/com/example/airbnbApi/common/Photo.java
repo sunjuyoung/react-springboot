@@ -1,5 +1,6 @@
 package com.example.airbnbApi.common;
 
+import com.example.airbnbApi.listing.Listing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,19 +15,29 @@ import lombok.NoArgsConstructor;
 public class Photo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String uuid;
 
     @Column(nullable = false)
     private String fileName;
 
-    @Column(nullable = false)
     private String fileType;
 
-    @Lob
-    private byte[] data;
+//
+//    @Lob
+//    private byte[] data;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "property_id", nullable = false)
-//    private Listing listing;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "listing_id", nullable = false)
+    private Listing listing;
+
+
+
+
+
+    public void setPhoto(Listing listing){
+        this.listing = listing;
+        listing.getImages().add(this);
+    }
+
+
 }
