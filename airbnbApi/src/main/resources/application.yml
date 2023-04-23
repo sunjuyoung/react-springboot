@@ -21,8 +21,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show_sql: true
-#    database: postgresql
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+    #database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: platform.notification.config.PGDialect
 
   servlet:
     multipart:

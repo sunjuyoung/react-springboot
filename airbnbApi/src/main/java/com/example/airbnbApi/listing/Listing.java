@@ -1,9 +1,7 @@
 package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.category.Category;
-import com.example.airbnbApi.category.CategoryListing;
 import com.example.airbnbApi.common.BaseTime;
-import com.example.airbnbApi.common.Images;
 import com.example.airbnbApi.common.Photo;
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.review.Review;
@@ -14,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +49,7 @@ public class Listing extends BaseTime {
     @Column(nullable = false)
     private int bathroomCount;
 
+    private String imageSrc;
 
 
     @OneToMany(mappedBy = "listing")
@@ -89,6 +87,7 @@ public class Listing extends BaseTime {
                 .guestCount(dto.getGuestCount())
                 .roomCount(dto.getRoomCount())
                 .host(account)
+                .imageSrc(dto.getImgPath())
                 .categories(Set.of(category))
                 .build();
         category.getListings().add(listing);

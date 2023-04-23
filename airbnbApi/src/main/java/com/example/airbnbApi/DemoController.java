@@ -29,6 +29,7 @@ import java.util.UUID;
 public class DemoController {
 
     private final PhotoService photoService;
+//    private final PhotoRepository photoRepository;
 
 
     @Value("${airbnb.upload.path}")
@@ -60,6 +61,8 @@ public class DemoController {
 //            uploadDTO.files().forEach(multiFile->{
                 String originalName = file.getOriginalFilename();
                 String uuid = UUID.randomUUID().toString();
+                String type  = file.getContentType();
+
                 Path savePath = Paths.get(uploadPath, uuid+"_"+ originalName);
 
                 try {
@@ -69,12 +72,11 @@ public class DemoController {
 
                 }
                 //list.add(new uploadResponse(uuid,originalName));
-                uploadResponse uploadImage = new uploadResponse(uuid,originalName);
-                Photo photo = new Photo(uploadImage.getLink());
+                uploadResponse uploadImage = new uploadResponse(uuid,originalName,type);
 
 
 //            });
-            return ResponseEntity.ok().body(uploadImage.getLink());
+            return ResponseEntity.ok().body(uploadImage);
         }
 
         return null;
@@ -86,7 +88,8 @@ public class DemoController {
 
     record uploadResponse(
             String uuid,
-            String fileName
+            String fileName,
+            String type
     ){
 
 

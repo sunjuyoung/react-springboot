@@ -30,4 +30,6 @@ public class RegisterListingDTO {
     private String category;
 
     private String imgPath;
+
+    private String uuid;
 }

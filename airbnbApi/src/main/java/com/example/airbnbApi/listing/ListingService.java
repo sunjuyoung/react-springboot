@@ -33,8 +33,8 @@ public class ListingService {
         Listing listing = Listing.createListing(account,registerListingDTO,category);
         Listing newListing = listingRepository.save(listing);
         if(registerListingDTO.getImgPath() != null && !registerListingDTO.getImgPath().equals("")){
-
-
+            Photo photo = new Photo(registerListingDTO.getUuid(), registerListingDTO.getImgPath(), null,newListing);
+            photoRepository.save(photo);
         }
     }
 

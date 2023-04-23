@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseListingListDTO {
 
+
+    private Integer id;
+
     private String email;
 
     private String title;
@@ -28,14 +31,24 @@ public class ResponseListingListDTO {
 
     private String category;
 
-    private String imgPath;
+    private String imageSrc;
 
+//
+//    @QueryProjection
+//    public ResponseListingListDTO(String title, String location, int price, String description) {
+//        this.title = title;
+//        this.location = location;
+//        this.price = price;
+//        this.description = description;
+//    }
 
     @QueryProjection
-    public ResponseListingListDTO(String title, String location, int price, String description) {
+    public ResponseListingListDTO(Integer id, String title, String location, int price, String imageSrc,String category) {
+        this.id = id;
         this.title = title;
         this.location = location;
         this.price = price;
-        this.description = description;
+        this.imageSrc = imageSrc;
+        this.category = category;
     }
 }

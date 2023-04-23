@@ -19,7 +19,7 @@ public class Account  extends BaseTime {
     @Column(name = "account_id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -31,6 +31,10 @@ public class Account  extends BaseTime {
     private String emailVerified;
 
     private String phoneNumber;
+
+    private boolean social;
+
+    private String image;
 
     @Temporal(TemporalType.DATE)
     private LocalDate dateOfBirth;
