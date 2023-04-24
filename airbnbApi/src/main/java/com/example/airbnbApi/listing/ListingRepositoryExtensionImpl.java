@@ -28,8 +28,6 @@ import static com.querydsl.jpa.JPAExpressions.select;
 public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport implements ListingRepositoryExtension {
 
 
-
-
     /**
      * Creates a new {@link QuerydslRepositorySupport} instance for the given domain type.
      */
@@ -38,12 +36,8 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
     }
 
 
-
-
-
     @Override
     public List<ResponseListingListDTO> allListings() {
-
 
         QListing listingSub = new QListing("listingSub");
 
@@ -54,16 +48,12 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
                 , listing.price
                 , listing.imageSrc,
 
-                select( Expressions.stringTemplate("string_agg({0}, {1})", category.name, ",").as("category"))
+                select( Expressions.stringTemplate("string_agg({0}, ',')", category.name, ",").as("category"))
                         .from(category)
                         .innerJoin(category.listings, listingSub)
                         .groupBy(listingSub.id)))
 
                 .from(listing);
-
-
-
-
 
         return null;
 

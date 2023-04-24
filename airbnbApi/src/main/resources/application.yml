@@ -22,8 +22,8 @@ spring:
         format_sql: true
         show_sql: true
     database: postgresql
-    #database-platform: org.hibernate.dialect.PostgreSQLDialect
-    database-platform: platform.notification.config.PGDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 
   servlet:
     multipart:
@@ -48,3 +48,10 @@ spring:
 
 
 airbnb.upload.path: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images
+
+mybatis:
+  mapper-locations: mybatis/mapper/**.xml
+
+logging:
+  level:
+    org.hibernate.sql: debug

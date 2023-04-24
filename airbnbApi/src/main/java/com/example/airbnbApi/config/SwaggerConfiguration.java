@@ -2,6 +2,7 @@ package com.example.airbnbApi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,44 +19,38 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@EnableSwagger2
+@Configuration
 public class SwaggerConfiguration {
 
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.airbnbApi"))
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
                 .paths(PathSelectors.any())
-                .build();
-    }
-    private SecurityContext securityContext() {
-        return SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .build();
-    }
-
-    // 추가
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
-    }
-
-    // 추가
-    private ApiKey apiKey() {
-        return new ApiKey("Authorization", "Authorization", "header");
+                .build()
+                .securitySchemes(List.of(apiKey())) //추가된 부분
+                .securityContexts(List.of(securityContext())) //추가된 부분
+                .apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Backend API")
-                .description("Backend API 문서")
-                .version("1.0")
+                .title("Boot API 01 Project Swagger")
                 .build();
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("Authorization", "Bearer Token", "header");
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(defaultAuth())
+                .operationSelector(selector -> selector.requestMappingPattern().startsWith("/api/")).build();
+    }
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "global access");
+        return List.of(new SecurityReference("Authorization", new AuthorizationScope[] {authorizationScope}));
     }
 }

@@ -2,6 +2,8 @@ package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
+import com.example.airbnbApi.listing.mapper.ListingMapper;
+import com.example.airbnbApi.listing.vo.ListingVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 public class ListingController {
 
     private final ListingService listingService;
+    private final ListingMapper mapper;
 
     @PostMapping
     public ResponseEntity<?> addListing(@RequestBody RegisterListingDTO dto){
@@ -23,8 +26,9 @@ public class ListingController {
 
     @GetMapping
     public ResponseEntity<?> getAllListings(){
-        List<ResponseListingListDTO> result = listingService.getAllListings();
-        return ResponseEntity.ok().body(result);
+        //List<ResponseListingListDTO> result = listingService.getAllListings();
+        List<ListingVO> allListings = mapper.getAllListings();
+        return ResponseEntity.ok().body(allListings);
     }
 
 }
