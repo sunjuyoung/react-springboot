@@ -84,15 +84,14 @@ const ListingForm = () => {
   };
 
   const listingSubmit = async (data) => {
-    console.log(data.imageSrc);
-
     const result = await saveImage();
 
     mutation.mutate({
       ...data,
       location: location.label,
       email: user.email,
-      imgPath: result.data,
+      imgPath: result.data.link,
+      uuid: result.data.uuid,
     });
   };
 

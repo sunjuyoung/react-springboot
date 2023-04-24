@@ -4,7 +4,7 @@ import MenuItem from "./MenuItem";
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../Avatar";
 
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { toast } from "react-hot-toast";
@@ -25,12 +25,21 @@ const UserMenu = ({ user }) => {
     toast.error("Logout");
     navigate("/");
   };
+  const onListingForm = useCallback(() => {
+    if (!user) {
+      navigate("/login");
+    }
+    navigate("/listingForm");
+  }, []);
 
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
-        <div className="hidden px-4 py-3 text-sm font-semibold transition rounded-full cursor-pointer md:block hover:bg-neutral-100">
-          Airbnb your home {user?.email}
+        <div
+          onClick={onListingForm}
+          className="hidden px-4 py-3 text-sm font-semibold transition rounded-full cursor-pointer md:block hover:bg-neutral-100"
+        >
+          Airbnb your home
         </div>
         <div
           onClick={toggleOpen}
