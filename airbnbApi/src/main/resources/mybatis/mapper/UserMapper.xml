@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.airbnbApi.user.mapper.UserMapper">
+
+
+
+    <select id="getAccountWithFavoritesById" resultType="com.example.airbnbApi.user.vo.FavoriteVO">
+        SELECT f.favorite_listing_id
+        FROM account a
+        INNER JOIN favorites f ON f.favorite_id = a.account_id
+        ;
+    </select>
+
+
+
+
+
+    
+</mapper>

@@ -1,9 +1,14 @@
 package com.example.airbnbApi.listing.dto;
 
+import com.example.airbnbApi.listing.Listing;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -29,9 +34,10 @@ public class ResponseListingListDTO {
 
     private int guestCount;
 
-    private String category;
 
-    private String imageSrc;
+    private String category ;
+
+    private String imageSrc ;
 
 //
 //    @QueryProjection
@@ -41,6 +47,7 @@ public class ResponseListingListDTO {
 //        this.price = price;
 //        this.description = description;
 //    }
+
 
     @QueryProjection
     public ResponseListingListDTO(Integer id, String title, String location, int price, String imageSrc,String category) {

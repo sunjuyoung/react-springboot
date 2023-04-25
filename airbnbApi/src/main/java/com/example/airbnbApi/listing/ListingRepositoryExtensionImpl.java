@@ -23,8 +23,6 @@ import static com.example.airbnbApi.category.QCategory.*;
 import static com.example.airbnbApi.listing.QListing.*;
 import static com.querydsl.jpa.JPAExpressions.select;
 
-@Log4j2
-@Transactional(readOnly = true)
 public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport implements ListingRepositoryExtension {
 
 

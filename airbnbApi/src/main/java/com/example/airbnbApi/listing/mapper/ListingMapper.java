@@ -11,5 +11,5 @@ public interface ListingMapper {
 
     List<ListingVO> getAllListings();
 
-    String getTest();
+    ListingVO getListingById(Integer listing_id);
 }

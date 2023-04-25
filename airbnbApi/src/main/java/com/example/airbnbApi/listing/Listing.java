@@ -73,7 +73,6 @@ public class Listing extends BaseTime {
 
 
 
-
     /**
      * 생성메서드
      */

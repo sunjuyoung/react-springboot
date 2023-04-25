@@ -1,11 +1,15 @@
 package com.example.airbnbApi.user;
 
 import com.example.airbnbApi.common.BaseTime;
+import com.example.airbnbApi.listing.Listing;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -41,6 +45,15 @@ public class Account  extends BaseTime {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+            name = "favorites",
+            joinColumns = @JoinColumn(name = "favorite_id")
+    )
+    @Column(name = "favorite_listing_id")
+    private Set<Integer> favorites = new HashSet<>();
 
 
 

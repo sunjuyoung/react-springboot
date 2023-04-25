@@ -1,6 +1,7 @@
 package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
+import com.example.airbnbApi.listing.dto.ResponseGetListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
 import com.example.airbnbApi.listing.mapper.ListingMapper;
 import com.example.airbnbApi.listing.vo.ListingVO;
@@ -29,6 +30,12 @@ public class ListingController {
         //List<ResponseListingListDTO> result = listingService.getAllListings();
         List<ListingVO> allListings = mapper.getAllListings();
         return ResponseEntity.ok().body(allListings);
+    }
+
+    @GetMapping("/{listing_id}")
+    public ResponseEntity<?> getListingById(@PathVariable Integer listing_id){
+        ResponseGetListingDTO getListing =  listingService.getListingById(listing_id);
+        return ResponseEntity.ok().body(getListing);
     }
 
 }

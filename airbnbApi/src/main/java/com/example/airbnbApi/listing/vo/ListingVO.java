@@ -31,4 +31,6 @@ public class ListingVO {
     private String categories;
 
     private String image_src;
+
+    private String favorite_ids;
 }

@@ -5,11 +5,14 @@ import com.example.airbnbApi.category.CategoryRepository;
 import com.example.airbnbApi.common.Photo;
 import com.example.airbnbApi.common.PhotoRepository;
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
+import com.example.airbnbApi.listing.dto.ResponseGetListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
+import com.example.airbnbApi.listing.vo.ListingVO;
 import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,5 +43,14 @@ public class ListingService {
 
     public List<ResponseListingListDTO> getAllListings(){
         return  listingRepository.allListings();
+    }
+
+    public ResponseGetListingDTO getListingById(Integer listing_id) {
+        Listing listing = listingRepository.findById(listing_id)
+                .orElseThrow(()->new UsernameNotFoundException("user not found"));
+
+        ResponseGetListingDTO getListingDTO = new ResponseGetListingDTO(listing);
+        return getListingDTO;
+
     }
 }

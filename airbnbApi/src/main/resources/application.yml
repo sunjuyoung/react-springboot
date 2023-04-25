@@ -30,24 +30,11 @@ spring:
       max-request-size: 10MB
       enabled: true
       max-file-size: 10MB
-      location: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images
+      location: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images\\listing
 
 
 
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          github:
-#            clientId:
-#            clientSecret:
-#
-#          google:
-#            client-id:
-#            client-secret:
-
-
-airbnb.upload.path: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images
+airbnb.upload.path: C:\\Users\\SUN\\work\\airbnb-react-spring\\ui\\public\\images\\listing
 
 mybatis:
   mapper-locations: mybatis/mapper/**.xml
