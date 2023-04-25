@@ -12,4 +12,11 @@ export const getAllListing = async (token) => {
   return response.data;
 };
 
+export const getListingById = async (id, token) => {
+  const response = await newRequest.get(`/listing/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export default newRequest;

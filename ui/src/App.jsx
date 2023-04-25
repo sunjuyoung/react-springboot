@@ -8,6 +8,7 @@ import Home from "./pages/home";
 import { Toaster } from "react-hot-toast";
 import { defaultFormat } from "moment/moment";
 import ListingForm from "./pages/listing/ListingForm";
+import ListingPage from "./pages/listing/ListingPage";
 
 function App() {
   const Layout = () => {
@@ -40,6 +41,10 @@ function App() {
         {
           path: "/listingForm",
           element: <ListingForm />,
+        },
+        {
+          path: "/listing/:id",
+          element: <ListingPage />,
         },
       ],
     },

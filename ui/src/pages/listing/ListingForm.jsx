@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CategoryInput from "../../components/inputs/CategoryInput";
 import { categories } from "../../components/navbar/Categories";
@@ -13,7 +13,7 @@ import Map from "../../components/Map";
 import Counter from "../../components/inputs/Counter";
 import ImageUpload from "../../components/inputs/ImageUpload";
 import Button from "../../components/Button";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { useSelector } from "react-redux";
 import axios from "axios";
