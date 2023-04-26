@@ -32,4 +32,8 @@ public class RegisterListingDTO {
     private String imgPath;
 
     private String uuid;
+
+    private String latlng;
+
+    private String icon;
 }

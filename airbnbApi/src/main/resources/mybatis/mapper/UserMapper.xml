@@ -3,8 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.airbnbApi.user.mapper.UserMapper">
 
-
-
     <select id="getAccountWithFavoritesById" resultType="com.example.airbnbApi.user.vo.FavoriteVO">
         SELECT f.favorite_listing_id
         FROM account a

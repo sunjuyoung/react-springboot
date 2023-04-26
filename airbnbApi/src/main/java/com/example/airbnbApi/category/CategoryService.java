@@ -30,9 +30,12 @@ public class CategoryService {
                     ,"Lux"
     };
 
+
+
     public void createCategory(){
         for(String c : categories){
             Category newCategory = Category.builder()
+
                     .name(c)
                     .build();
             categoryRepository.save(newCategory);

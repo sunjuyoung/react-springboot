@@ -27,6 +27,10 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
+    private String icon;
+
+    private String description;
+
     @Builder.Default
     @ManyToMany
     @JoinTable(name = "listing_category",

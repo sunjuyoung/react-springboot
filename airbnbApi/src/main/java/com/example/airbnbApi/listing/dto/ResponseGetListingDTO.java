@@ -36,6 +36,8 @@ public class ResponseGetListingDTO {
 
     private String category;
 
+    private String latlng;
+
     private Set<String> imageSrc = new HashSet<>();
 
     public ResponseGetListingDTO(Listing listing) {
@@ -43,7 +45,8 @@ public class ResponseGetListingDTO {
         this.name = listing.getHost().getName();
         this.email = listing.getHost().getEmail();
         this.title = listing.getTitle();
-        this.location = listing.getLocation();
+        this.location = listing.getMap().getLocation();
+        this.latlng = listing.getMap().getLatlng().replace("[", "").replace("]", "");;
         this.price = listing.getPrice();
         this.description = listing.getDescription();
         this.roomCount = listing.getRoomCount();

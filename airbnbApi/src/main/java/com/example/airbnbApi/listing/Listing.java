@@ -2,6 +2,7 @@ package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.common.BaseTime;
+import com.example.airbnbApi.common.Map;
 import com.example.airbnbApi.common.Photo;
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.review.Review;
@@ -31,8 +32,11 @@ public class Listing extends BaseTime {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private String location;
+    @Embedded
+    private Map map;
+
+//    @Column(nullable = false)
+//    private String location;
 
     @Column(nullable = false)
     private int price;
@@ -81,7 +85,8 @@ public class Listing extends BaseTime {
                 .description(dto.getDescription())
                 .title(dto.getTitle())
                 .price(dto.getPrice())
-                .location(dto.getLocation())
+                .map(new Map(dto.getLocation(), dto.getLatlng()))
+
                 .bathroomCount(dto.getBathroomCount())
                 .guestCount(dto.getGuestCount())
                 .roomCount(dto.getRoomCount())

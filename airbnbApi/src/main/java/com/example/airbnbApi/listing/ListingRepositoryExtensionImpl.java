@@ -39,19 +39,6 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
 
         QListing listingSub = new QListing("listingSub");
 
-        JPQLQuery<ResponseListingListDTO> categories =
-                select(new QResponseListingListDTO(listing.id
-                , listing.title
-                , listing.location
-                , listing.price
-                , listing.imageSrc,
-
-                select( Expressions.stringTemplate("string_agg({0}, ',')", category.name, ",").as("category"))
-                        .from(category)
-                        .innerJoin(category.listings, listingSub)
-                        .groupBy(listingSub.id)))
-
-                .from(listing);
 
         return null;
 
