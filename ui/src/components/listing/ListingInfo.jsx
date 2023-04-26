@@ -2,27 +2,33 @@ import Avatar from "../Avatar";
 import { useMemo } from "react";
 import { categories } from "../navbar/Categories";
 import React from "react";
+import Map from "../Map";
 
 const ListingInfo = ({
   username,
-  //image,
+  userImage,
   category,
   description,
   roomCount,
   guestCount,
   bathroomCount,
   location,
+  latlng,
 }) => {
+  //카테고리
   const cate = useMemo(() => {
     return categories.find((items) => items.label === category);
   }, [category]);
+
+  //지역
+  const lat = latlng.split(",").map(Number);
 
   return (
     <div className="flex flex-col col-span-4 gap-8">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2 text-xl font-semibold ">
           <div>Hosted by {username}</div>
-          {/* <Avatar src={image?[0]} /> */}
+          <Avatar src={null} />
         </div>
         <div className="flex flex-row items-center gap-4 font-light text-neutral-500">
           <div>{guestCount} guests</div>
@@ -45,17 +51,11 @@ const ListingInfo = ({
             </div>
           </div>
         </>
-
-        // <ListingCategory
-        //   icon={category.icon}
-        //   label={category?.label}
-        //   description={category?.description}
-        // />
       )}
       <hr />
       <div className="text-lg font-light text-neutral-500">{description}</div>
       <hr />
-      {/* <Map center={coordinates} /> */}
+      <Map center={lat} />
     </div>
   );
 };

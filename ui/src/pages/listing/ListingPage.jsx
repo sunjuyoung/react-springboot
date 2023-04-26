@@ -9,7 +9,6 @@ const ListingPage = () => {
   const param = useParams();
   const token = useSelector((state) => state?.token);
   const user = useSelector((state) => state?.user);
-
   const listing_id = parseInt(param.id);
 
   const {
@@ -46,7 +45,11 @@ xl:px-20 md:px-10 px-4 sm:px-2"
           relative
         "
           >
-            <img src={""} className="object-cover w-full" alt="Image" />
+            <img
+              src={`/images/listing/${listing.imageSrc[0]}`}
+              className="object-cover w-full"
+              alt="Image"
+            />
             {/* <div className="absolute top-5 right-5">
           <HeartButton listingId={id} currentUser={currentUser} />
         </div> */}
@@ -55,13 +58,14 @@ xl:px-20 md:px-10 px-4 sm:px-2"
           <div className="grid grid-cols-1 mt-6 md:grid-cols-7 md:gap-10">
             <ListingInfo
               username={listing.name}
-              //image={null}
+              userImage={null}
               category={listing.category}
               description={listing.description}
               roomCount={listing.roomCount}
               guestCount={listing.guestCount}
               bathroomCount={listing.bathroomCount}
               location={listing.location}
+              latlng={listing.latlng}
             />
             {/* <div className="order-first mb-10 md:order-last md:col-span-3">
               <ListingReservation

@@ -92,6 +92,7 @@ const ListingForm = () => {
       email: user.email,
       imgPath: result.data.link,
       uuid: result.data.uuid,
+      latlng: JSON.stringify(location.latlng),
     });
   };
 
