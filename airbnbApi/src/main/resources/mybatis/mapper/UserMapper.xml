@@ -10,9 +10,16 @@
         ;
     </select>
 
-
-
-
+    <select id="getUserWithFavoriteByEmail" resultType="com.example.airbnbApi.user.vo.UserResponseVO">
+        SELECT a.account_id AS account_id, a.email , a.name,
+               (SELECT STRING_AGG(cast(fa.favorite_listing_id AS text), ', ')
+                FROM favorites fa
+                         INNER JOIN account ac ON ac.account_id = fa.favorite_id
+                GROUP BY ac.account_id) AS favorite_ids
+        FROM account a
+        WHERE a.email = #{email}
+        ORDER BY a.account_id ASC;
+    </select>
 
     
 </mapper>

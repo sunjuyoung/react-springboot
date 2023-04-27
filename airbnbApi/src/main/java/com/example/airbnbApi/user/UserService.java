@@ -15,8 +15,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public void addFavorite(FavoriteDTO favoriteDTO){
-        Account test = userRepository.findByEmail(favoriteDTO.getEmail()).orElseThrow();
-        test.getFavorites().add(favoriteDTO.getListing_id());
+        Account account = userRepository.findByEmail(favoriteDTO.getEmail()).orElseThrow();
+        account.getFavorites().add(favoriteDTO.getListing_id());
     }
 
 
@@ -24,5 +24,11 @@ public class UserService {
         Account account = userRepository.findFavoritesById(account_id);
         Set<Integer> favorites = account.getFavorites();
         return favorites;
+    }
+
+    public void deleteFavorite(Integer listing_id,Integer userId) {
+        Account account = userRepository.findFavoritesById(userId);
+        account.getFavorites().remove(listing_id);
+        //account.getFavorites().add(favoriteDTO.getListing_id());
     }
 }

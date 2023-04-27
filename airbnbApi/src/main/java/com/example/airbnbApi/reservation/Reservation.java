@@ -2,6 +2,7 @@ package com.example.airbnbApi.reservation;
 
 import com.example.airbnbApi.common.BaseTime;
 import com.example.airbnbApi.listing.Listing;
+import com.example.airbnbApi.reservation.dto.ReservationDTO;
 import com.example.airbnbApi.user.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,6 @@ import java.util.List;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class Reservation extends BaseTime {
@@ -26,16 +26,15 @@ public class Reservation extends BaseTime {
 
     @Column(nullable = false)
     @Temporal(value = TemporalType.DATE)
-    private LocalDate checkInDate;
+    private LocalDate startDate;
 
     @Column(nullable = false)
     @Temporal(value = TemporalType.DATE)
-    private LocalDate checkOutDate;
+    private LocalDate endDate;
 
     @Column(nullable = false)
     private int totalPrice;
 
-    @Column(nullable = false)
     private Boolean paymentStatus;
 
 //    @Column(nullable = false)
@@ -48,6 +47,17 @@ public class Reservation extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable = false)
     private Listing listing;
+
+    protected Reservation(){}
+
+    public Reservation(ReservationDTO reservationDTO, Account guest, Listing listing) {
+        this.startDate = reservationDTO.getStartDate();
+        this.endDate = reservationDTO.getEndDate();
+        this.totalPrice = reservationDTO.getTotalPrice();
+        this.guest = guest;
+        this.listing = listing;
+    }
+
 
     // Getter and Setter methods
 

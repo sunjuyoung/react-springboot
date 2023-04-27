@@ -6,6 +6,8 @@ import com.example.airbnbApi.user.Role;
 import com.example.airbnbApi.user.User;
 import com.example.airbnbApi.user.UserRepository;
 
+import com.example.airbnbApi.user.mapper.UserMapper;
+import com.example.airbnbApi.user.vo.UserResponseVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,8 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -27,6 +29,8 @@ public class AuthService   {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    private final UserMapper userMapper;
 
     public void register(RegisterRequest request) {
         var user = Account.builder()
@@ -50,11 +54,14 @@ public class AuthService   {
         );
         Account account = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
+
+
         var jwtToken = jwtService.generateToken(new User(account));
-        Map<String,String> currentUser = new HashMap<>();
+        Map<String, Object> currentUser = new HashMap<>();
         currentUser.put("id",account.getId().toString());
         currentUser.put("name",account.getName());
         currentUser.put("email",account.getEmail());
+        currentUser.put("favorites",account.getFavorites());
 
 
         log.info(jwtToken);
