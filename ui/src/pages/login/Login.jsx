@@ -35,10 +35,12 @@ const Login = () => {
       email: data.email,
       password: data.password,
     });
+    console.log(res.data);
     dispatch(
       setLogin({
         user: res.data.user,
         token: res.data.token,
+        favorites: res.data.user.favorites,
       })
     );
 

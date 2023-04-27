@@ -50,7 +50,7 @@ const ListingForm = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate("/login");
     }
   }, []);
 

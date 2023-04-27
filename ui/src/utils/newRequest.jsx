@@ -19,4 +19,24 @@ export const getListingById = async (id, token) => {
   return response.data;
 };
 
+export const useFavorites = async (data, token, hasFavorited) => {
+  let res;
+  console.log(data);
+
+  if (hasFavorited) {
+    res = await newRequest.delete(
+      `/favorite/${data.listing_id}/${data.userId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  } else {
+    res = await newRequest.post("/favorite", data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+
+  return res.data;
+};
+
 export default newRequest;
