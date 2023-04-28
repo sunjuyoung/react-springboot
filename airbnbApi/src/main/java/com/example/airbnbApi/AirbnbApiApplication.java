@@ -35,6 +35,7 @@ public class AirbnbApiApplication {
 		return args -> {
 			categoryService.createCategory();
 			authService.register(new RegisterRequest("test@test.com","test1","1234"));
+			authService.register(new RegisterRequest("test2@test.com","test2","1234"));
 			authService.authenticate(new AuthRequest("test@test.com","1234"));
 		};
 	}

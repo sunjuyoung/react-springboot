@@ -18,8 +18,6 @@ public class ReservationDTO {
 
     private Integer user_id;
 
-    private String email;
-
     private LocalDate startDate;
 
     private LocalDate endDate;

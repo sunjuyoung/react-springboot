@@ -37,7 +37,6 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
     @Override
     public List<ResponseListingListDTO> allListings() {
 
-        QListing listingSub = new QListing("listingSub");
 
 
         return null;

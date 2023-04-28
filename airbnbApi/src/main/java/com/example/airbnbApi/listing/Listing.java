@@ -86,7 +86,6 @@ public class Listing extends BaseTime {
                 .title(dto.getTitle())
                 .price(dto.getPrice())
                 .map(new Map(dto.getLocation(), dto.getLatlng()))
-
                 .bathroomCount(dto.getBathroomCount())
                 .guestCount(dto.getGuestCount())
                 .roomCount(dto.getRoomCount())
