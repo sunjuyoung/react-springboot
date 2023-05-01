@@ -41,16 +41,22 @@ public class ListingService {
         }
     }
 
-    public List<ResponseListingListDTO> getAllListings(){
-        return  listingRepository.allListings();
-    }
+//    public List<ResponseListingListDTO> getAllListings(){
+//        return  listingRepository.allListings();
+//    }
 
     public ResponseGetListingDTO getListingById(Integer listing_id) {
         Listing listing = listingRepository.findById(listing_id)
-                .orElseThrow(()->new UsernameNotFoundException("user not found"));
+                .orElseThrow();
 
         ResponseGetListingDTO getListingDTO = new ResponseGetListingDTO(listing);
         return getListingDTO;
 
+    }
+
+    public List<ResponseListingListDTO> getListingsByUserId(Integer userId) {
+        List<ResponseListingListDTO> result =
+                listingRepository.getListingsByUserId(userId);
+        return result;
     }
 }

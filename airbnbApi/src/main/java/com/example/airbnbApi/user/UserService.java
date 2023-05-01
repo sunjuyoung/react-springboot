@@ -1,10 +1,12 @@
 package com.example.airbnbApi.user;
 
 import com.example.airbnbApi.user.dto.FavoriteDTO;
+import com.example.airbnbApi.user.dto.FavoriteListDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -30,5 +32,10 @@ public class UserService {
         Account account = userRepository.findFavoritesById(userId);
         account.getFavorites().remove(listing_id);
         //account.getFavorites().add(favoriteDTO.getListing_id());
+    }
+
+    public List<FavoriteListDTO> getFavoriteListingList(Integer account_id) {
+        List<FavoriteListDTO> favoriteListingList = userRepository.getFavoriteListingList(account_id);
+        return favoriteListingList;
     }
 }

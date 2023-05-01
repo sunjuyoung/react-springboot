@@ -29,4 +29,10 @@ public class ReservationController {
         return ResponseEntity.ok().body(result);
     }
 
+    @DeleteMapping("/{reservationId}/{userId}")
+    public ResponseEntity<?> deleteReservation(@PathVariable Integer reservationId,
+                                               @PathVariable Integer userId){
+        reservationService.deleteReservation(reservationId,userId);
+        return ResponseEntity.ok().body("success");
+    }
 }

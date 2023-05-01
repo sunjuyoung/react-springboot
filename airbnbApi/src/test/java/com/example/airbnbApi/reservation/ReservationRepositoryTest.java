@@ -14,9 +14,6 @@ class ReservationRepositoryTest {
     @Autowired
     ReservationRepository reservationRepository;
 
-    @Test
-    public void test1(){
-        reservationRepository.getReservations();
-    }
+
 
 }

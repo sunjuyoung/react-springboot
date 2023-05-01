@@ -1,12 +1,14 @@
 package com.example.airbnbApi.user;
 
+import com.example.airbnbApi.user.dto.FavoriteListDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Transactional(readOnly = true)
 public interface UserRepositoryExtension {
 
 
-    Set<Integer> getAccountWithFavoritesById(Integer listing_id);
+    List<FavoriteListDTO> getFavoriteListingList(Integer listing_id);
 }

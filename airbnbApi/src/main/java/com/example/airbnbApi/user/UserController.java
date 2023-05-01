@@ -1,12 +1,14 @@
 package com.example.airbnbApi.user;
 
 import com.example.airbnbApi.user.dto.FavoriteDTO;
+import com.example.airbnbApi.user.dto.FavoriteListDTO;
 import com.example.airbnbApi.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Log4j2
@@ -32,10 +34,18 @@ public class UserController {
         return ResponseEntity.ok().body("success");
     }
 
+    @GetMapping("/favorite/listingList/{account_id}")
+    public ResponseEntity<?> getFavoriteListingList(@PathVariable Integer account_id){
+        List<FavoriteListDTO> result = userService.getFavoriteListingList(account_id);
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping("/favorite/{account_id}")
-    public ResponseEntity<?> getFavoriteByEmail(@PathVariable Integer account_id){
+    public ResponseEntity<?> getFavoriteById(@PathVariable Integer account_id){
         Set<Integer> favorites = userService.getFavoriteByEmail(account_id);
        // Set<Integer> favoritesById = userMapper.getAccountWithFavoritesById(account_id);
         return ResponseEntity.ok().body(favorites);
     }
+
+
 }

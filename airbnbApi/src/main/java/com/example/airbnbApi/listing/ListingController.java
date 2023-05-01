@@ -38,4 +38,11 @@ public class ListingController {
         return ResponseEntity.ok().body(getListing);
     }
 
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<?> getListingsByUserId(@PathVariable Integer userId){
+        List<ResponseListingListDTO> result = listingService.getListingsByUserId(userId);
+        return ResponseEntity.ok().body(result);
+    }
+
+
 }

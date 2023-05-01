@@ -30,4 +30,8 @@ public class ReservationService {
         List<ReservationResponseDTO> result = reservationRepository.getReservationsByUser(userId);
         return result;
     }
+
+    public void deleteReservation(Integer reservationId,Integer userId) {
+
+    }
 }

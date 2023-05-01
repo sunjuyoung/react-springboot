@@ -16,9 +16,9 @@ import java.util.Set;
 public class ResponseListingListDTO {
 
 
-    private Integer id;
+    private Integer listing_id;
 
-    private String email;
+    private Integer user_id;
 
     private String title;
 
@@ -34,10 +34,9 @@ public class ResponseListingListDTO {
 
     private int guestCount;
 
-
     private String category ;
 
-    private String imageSrc ;
+    private String image_src ;
 
 //
 //    @QueryProjection
@@ -50,12 +49,14 @@ public class ResponseListingListDTO {
 
 
     @QueryProjection
-    public ResponseListingListDTO(Integer id, String title, String location, int price, String imageSrc,String category) {
-        this.id = id;
+    public ResponseListingListDTO(Integer listing_id, Integer user_id, String title,
+                                  String location, int price, String image_src,String category) {
+        this.listing_id = listing_id;
+        this.user_id = user_id;
         this.title = title;
         this.location = location;
         this.price = price;
-        this.imageSrc = imageSrc;
+        this.image_src = image_src;
         this.category = category;
     }
 }

@@ -1,10 +1,15 @@
 package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.category.QCategory;
+import com.example.airbnbApi.listing.dto.ListingSearchCondition;
 import com.example.airbnbApi.listing.dto.QResponseListingListDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
+import com.example.airbnbApi.reservation.QReservation;
+import com.example.airbnbApi.user.QAccount;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -16,12 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.expression.common.ExpressionUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.airbnbApi.category.QCategory.*;
 import static com.example.airbnbApi.listing.QListing.*;
+import static com.example.airbnbApi.reservation.QReservation.*;
+import static com.example.airbnbApi.user.QAccount.*;
 import static com.querydsl.jpa.JPAExpressions.select;
+import static org.springframework.util.StringUtils.*;
 
 public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport implements ListingRepositoryExtension {
 
@@ -35,11 +45,62 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
 
 
     @Override
-    public List<ResponseListingListDTO> allListings() {
-
-
-
-        return null;
+    public List<ResponseListingListDTO> getListingsByUserId(Integer userId) {
+        JPQLQuery<ResponseListingListDTO> result = listingList();
+        List<ResponseListingListDTO> fetch = result.where(account.id.eq(userId)).fetch();
+        return fetch;
 
     }
+
+    @Override
+    public List<ResponseListingListDTO> listingListBySearch(ListingSearchCondition condition) {
+//        BooleanBuilder builder = new BooleanBuilder();
+//        if(hasText(condition.getLocationValue())){
+//            builder.and(listing.map.location.eq(condition.getLocationValue()));
+//        }
+//        if(condition.getStartDate() != null && condition.getEndDate() != null){
+//            builder.and(reservation.startDate.lt(condition.getStartDate()).and(
+//                    reservation.endDate.gt(condition.getStartDate())));
+//
+//        }
+
+        JPQLQuery<ResponseListingListDTO> listings = listingList();
+
+        List<ResponseListingListDTO> fetch
+                = listings.where(
+                locationEq(condition.getLocationValue()),
+                dateEq(condition.getStartDate(),condition.getEndDate())
+        ).fetch();
+
+        return fetch;
+    }
+
+    private Predicate locationEq(String locationValue){
+        return hasText(locationValue) ? listing.map.location.eq(locationValue) : null;
+    }
+    private Predicate dateEq(LocalDate startDate ,LocalDate endDate){
+        if(startDate != null && endDate != null){
+           return reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate))
+                   .or(reservation.startDate.lt(endDate).and(reservation.endDate.gt(endDate)));
+
+        }
+        return null;
+    }
+
+    private  JPQLQuery<ResponseListingListDTO> listingList() {
+       return from(listing)
+                .innerJoin(account).on(listing.host.eq(account))
+               .leftJoin(listing, reservation.listing)
+                .select(new QResponseListingListDTO(
+                        listing.id,
+                        account.id,
+                        listing.title,
+                        listing.map.location,
+                        listing.price,
+                        listing.imageSrc,
+                        listing.categories.any().name
+                ));
+    }
+
+
 }
