@@ -1,6 +1,8 @@
 import React from "react";
+import useSearchModal from "../../hooks/useSearchModal";
 
 const Search = () => {
+  const searchModal = useSearchModal();
   return (
     <div
       className="
@@ -12,11 +14,16 @@ const Search = () => {
       shadow-sm 
       hover:shadow-md 
       transition 
-      cursor-pointer
+      
     "
     >
       <div className="flex flex-row items-center justify-between ">
-        <div className="px-6 text-sm font-semibold ">AnyWhere</div>
+        <div
+          onClick={searchModal.onOpen}
+          className="px-6 text-sm font-semibold cursor-pointer"
+        >
+          AnyWhere
+        </div>
         <div
           className="
           hidden 
@@ -32,7 +39,7 @@ const Search = () => {
           Any Week
         </div>
         <div className="flex flex-row items-center gap-3 pl-6 pr-2 text-sm text-gray-600 ">
-          <div className="hidden sm:block">search</div>
+          <div className="hidden cursor-pointer sm:block">search</div>
           <div className="p-2 text-white rounded-full bg-rose-500"></div>
         </div>
       </div>

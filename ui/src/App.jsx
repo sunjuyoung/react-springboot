@@ -9,12 +9,17 @@ import { Toaster } from "react-hot-toast";
 import { defaultFormat } from "moment/moment";
 import ListingForm from "./pages/listing/ListingForm";
 import ListingPage from "./pages/listing/ListingPage";
+import TripPage from "./pages/trip/TripPage";
+import FavoritesPage from "./pages/favorites/FavoritesPage";
+import PropertiesPage from "./pages/properties/PropertiesPage";
+import SearchLocationModal from "./components/modal/SearchLocationModal";
 
 function App() {
   const Layout = () => {
     return (
       <div className="app">
         <Navbar />
+        <SearchLocationModal />
         <Outlet />
         <Toaster />
       </div>
@@ -45,6 +50,18 @@ function App() {
         {
           path: "/listing/:id",
           element: <ListingPage />,
+        },
+        {
+          path: "/trips",
+          element: <TripPage />,
+        },
+        {
+          path: "/favorites",
+          element: <FavoritesPage />,
+        },
+        {
+          path: "/properties",
+          element: <PropertiesPage />,
         },
       ],
     },

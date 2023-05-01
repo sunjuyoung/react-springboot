@@ -21,8 +21,6 @@ const home = () => {
   if (isLoading) {
     return <span>Loading...</span>;
   }
-
-  console.log(listings);
   return (
     <div
       className="max-w-[2520px] mx-auto
@@ -35,6 +33,7 @@ xl:px-20 md:px-10 px-4 sm:px-2"
               key={listing.listing_id}
               data={listing}
               currentUser={user}
+              buttonLabel={"보기"}
             />
           );
         })}

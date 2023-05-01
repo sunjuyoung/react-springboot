@@ -12,12 +12,6 @@ const ListingReservation = ({
   disabled,
   disabledDates,
 }) => {
-  const initialDateRange = {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  };
-
   const handleChange = (ranges) => {
     onChangeDate(ranges.selection);
   };

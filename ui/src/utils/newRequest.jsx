@@ -39,4 +39,32 @@ export const useFavorites = async (data, token, hasFavorited) => {
   return res.data;
 };
 
+export const addReservation = async (data, token) => {
+  const response = await newRequest.post(`/reservation`, data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getReservationByUser = async (id, token) => {
+  const response = await newRequest.get(`/reservation/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getFavoriteListingListByUserId = async (id, token) => {
+  const response = await newRequest.get(`/favorite/listingList/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getListingsListByUserId = async (id, token) => {
+  const response = await newRequest.get(`/listing/list/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export default newRequest;

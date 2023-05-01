@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { getListingById } from "../../utils/newRequest";
+import { addReservation, getListingById } from "../../utils/newRequest";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Heading from "../../components/Heading";
 import ListingInfo from "../../components/listing/ListingInfo";
 import Button from "../../components/Button";
@@ -23,13 +23,18 @@ const ListingPage = () => {
     endDate: new Date(),
     key: "selection",
   };
-  const [dateRange, setDateRange] = useState(initialDateRange);
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
   const param = useParams();
   const token = useSelector((state) => state?.token);
   const user = useSelector((state) => state?.user);
   const listing_id = parseInt(param.id);
   const [totalPrice, setTotalPrice] = useState(1000);
   const reservations = [];
+  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -74,7 +79,26 @@ const ListingPage = () => {
     return dates;
   };
 
-  const onCreateReservation = () => {};
+  //create reservation
+  const mutatioReservation = useMutation({
+    mutationFn: (data) => {
+      return addReservation(data, token);
+    },
+    onSuccess: () => {
+      //queryClient.invalidateQueries(["reservations"]);
+      toast.success("Reservation sucess");
+    },
+  });
+
+  const onCreateReservation = () => {
+    mutatioReservation.mutate({
+      listing_id: listing_id,
+      user_id: user.id,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      totalPrice: totalPrice,
+    });
+  };
 
   if (isError) {
     return <span>Error: {error.message}</span>;
@@ -130,10 +154,11 @@ xl:px-20 md:px-10 px-4 sm:px-2"
                 price={listing.price}
                 totalPrice={totalPrice}
                 onChangeDate={(value) =>
-                  setDateRange({
+                  setDateRange((prev) => ({
+                    ...prev,
                     startDate: value.startDate,
                     endDate: value.endDate,
-                  })
+                  }))
                 }
                 dateRange={dateRange}
                 onSubmit={onCreateReservation}

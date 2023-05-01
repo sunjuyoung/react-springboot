@@ -84,10 +84,25 @@ const UserMenu = ({ user }) => {
           <div className="flex flex-col cursor-pointer">
             {user ? (
               <>
-                <MenuItem label="My trips" onClick={() => {}} />
-                <MenuItem label="My favorites" onClick={() => {}} />
+                <MenuItem
+                  label="My trips"
+                  onClick={() => {
+                    navigate("/trips");
+                  }}
+                />
+                <MenuItem
+                  label="My favorites"
+                  onClick={() => {
+                    navigate("/favorites");
+                  }}
+                />
                 <MenuItem label="My reservations" onClick={() => {}} />
-                <MenuItem label="My properties" onClick={() => {}} />
+                <MenuItem
+                  label="My properties"
+                  onClick={() => {
+                    navigate("/properties");
+                  }}
+                />
                 <MenuItem label="Airbnb your home" onClick={() => {}} />
                 <hr />
                 <MenuItem label="Logout" onClick={() => logoutHandle()} />

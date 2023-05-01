@@ -4,8 +4,19 @@ import { format } from "date-fns";
 import Button from "../Button";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const ListingCard = ({ data, currentUser, reservation = [] }) => {
+const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
   const navigate = useNavigate();
+
+  const reservationDate = useMemo(() => {
+    if (!reservation) {
+      return null;
+    }
+
+    const start = new Date(reservation.startDate);
+    const end = new Date(reservation.endDate);
+
+    return `${format(start, "PP")} - ${format(end, "PP")}`;
+  }, [reservation]);
 
   // const handleCancel = useCallback(
   //   (e) => {
@@ -51,18 +62,19 @@ const ListingCard = ({ data, currentUser, reservation = [] }) => {
             src={`images/listing/${data.image_src}`}
             alt="Listing"
           />
-          {/* <div className="absolute top-3 right-3">
-            <HeartButton listingId={data.listing_id} currentUser={currentUser} />
-          </div> */}
         </div>
         <div className="text-lg font-semibold">{data.location}</div>
-        <div className="font-light text-neutral-500">{data.categories}</div>
+        <div className="font-light text-neutral-500">
+          {reservationDate || data.category}
+        </div>
         <div className="flex flex-row items-center gap-1">
-          <div className="font-semibold">$ {data.price}</div>
+          <div className="font-semibold">
+            {data.totalPrice || data.price} 원
+          </div>
           <div className="font-light">night</div>
         </div>
 
-        <Button label="보기" />
+        <Button label={buttonLabel} />
       </div>
     </div>
   );
