@@ -6,7 +6,10 @@ import CountrySelect from "../inputs/CountrySelect";
 import Heading from "../Heading";
 import Map from "../../components/Map";
 import useSearchModal from "../../hooks/useSearchModal";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import newRequest from "../../utils/newRequest";
 
 const SearchLocationModal = () => {
   const searchModal = useSearchModal();
@@ -25,13 +28,13 @@ const SearchLocationModal = () => {
 
     const updatedQuery = {
       ...currentQuery,
-      locationValue: location?.value,
+      locationValue: location?.label,
     };
 
     console.log(updatedQuery);
     const url = qs.stringifyUrl(
       {
-        url: "/",
+        url: "",
         query: updatedQuery,
       },
       { skipNull: true }

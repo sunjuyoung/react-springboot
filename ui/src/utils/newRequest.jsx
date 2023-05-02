@@ -5,10 +5,13 @@ const newRequest = axios.create({
   // withCredentials: true,
 });
 
-export const getAllListing = async (token) => {
-  const response = await newRequest.get("/listing", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const getAllListing = async (token, locationValue) => {
+  const response = await newRequest.get(
+    `/listing?locationValue=${locationValue}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   return response.data;
 };
 
@@ -21,8 +24,6 @@ export const getListingById = async (id, token) => {
 
 export const useFavorites = async (data, token, hasFavorited) => {
   let res;
-  console.log(data);
-
   if (hasFavorited) {
     res = await newRequest.delete(
       `/favorite/${data.listing_id}/${data.userId}`,
