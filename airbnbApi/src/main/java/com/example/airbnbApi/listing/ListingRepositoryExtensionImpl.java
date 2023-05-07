@@ -1,5 +1,6 @@
 package com.example.airbnbApi.listing;
 
+import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.category.QCategory;
 import com.example.airbnbApi.listing.dto.ListingSearchCondition;
 import com.example.airbnbApi.listing.dto.QResponseListingListDTO;
@@ -11,6 +12,7 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -53,7 +55,7 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
     }
 
     @Override
-    public List<ResponseListingListDTO> listingListBySearch(ListingSearchCondition condition) {
+    public List<ResponseListingListDTO> listingListBySearch(ListingSearchCondition condition,Category category) {
 //        BooleanBuilder builder = new BooleanBuilder();
 //        if(hasText(condition.getLocationValue())){
 //            builder.and(listing.map.location.eq(condition.getLocationValue()));
@@ -69,16 +71,25 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
         List<ResponseListingListDTO> fetch
                 = listings.where(
                 locationEq(condition.getLocationValue()),
-                dateEq(condition.getStartDate(),condition.getEndDate())
+                dateEq(condition.getStartDate(),condition.getEndDate()),
+                categoryEq(category)
         ).fetch();
 
         return fetch;
     }
 
-    private Predicate locationEq(String locationValue){
+    private BooleanExpression locationEq(String locationValue){
         return hasText(locationValue) ? listing.map.location.eq(locationValue) : null;
     }
-    private Predicate dateEq(LocalDate startDate ,LocalDate endDate){
+
+    private BooleanExpression categoryEq(Category category){
+        if(category != null){
+            return  listing.categories.contains(category);
+        }
+        return null;
+    }
+
+    private BooleanExpression dateEq(LocalDate startDate ,LocalDate endDate){
         if(startDate != null && endDate != null){
            return reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate))
                    .or(reservation.startDate.lt(endDate).and(reservation.endDate.gt(endDate)));
@@ -90,15 +101,15 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
     private  JPQLQuery<ResponseListingListDTO> listingList() {
        return from(listing)
                 .innerJoin(account).on(listing.host.eq(account))
-               .leftJoin(listing, reservation.listing)
+                .leftJoin(reservation).on(reservation.listing.eq(listing))
+               .leftJoin(category).fetchJoin().distinct()
                 .select(new QResponseListingListDTO(
                         listing.id,
                         account.id,
                         listing.title,
                         listing.map.location,
                         listing.price,
-                        listing.imageSrc,
-                        listing.categories.any().name
+                        listing.imageSrc
                 ));
     }
 

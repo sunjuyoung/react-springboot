@@ -50,13 +50,13 @@ public class ResponseListingListDTO {
 
     @QueryProjection
     public ResponseListingListDTO(Integer listing_id, Integer user_id, String title,
-                                  String location, int price, String image_src,String category) {
+                                  String location, int price, String image_src) {
         this.listing_id = listing_id;
         this.user_id = user_id;
         this.title = title;
         this.location = location;
         this.price = price;
         this.image_src = image_src;
-        this.category = category;
+       // this.category = category;
     }
 }

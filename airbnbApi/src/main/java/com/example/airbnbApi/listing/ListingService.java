@@ -4,6 +4,7 @@ import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.category.CategoryRepository;
 import com.example.airbnbApi.common.Photo;
 import com.example.airbnbApi.common.PhotoRepository;
+import com.example.airbnbApi.listing.dto.ListingSearchCondition;
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseGetListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
@@ -15,9 +16,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Log4j2
 @Service
@@ -32,8 +36,16 @@ public class ListingService {
 
     public void createListing(RegisterListingDTO registerListingDTO){
         Account account = userRepository.findByEmail(registerListingDTO.getEmail()).get();
-        Category category = categoryRepository.findByName(registerListingDTO.getCategory());
-        Listing listing = Listing.createListing(account,registerListingDTO,category);
+
+
+        Set<String> setCategory = new HashSet<>(Set.of(registerListingDTO.getCategory()));
+
+        Set<Category> categories = categoryRepository.findByNameIn(setCategory);
+
+
+        //List<String> categoryList = new ArrayList<>(Arrays.asList(registerListingDTO.getCategory()));
+       // Category category = categoryRepository.findByName(registerListingDTO.getCategory());
+        Listing listing = Listing.createListing(account,registerListingDTO,categories);
         Listing newListing = listingRepository.save(listing);
         if(registerListingDTO.getImgPath() != null && !registerListingDTO.getImgPath().equals("")){
             Photo photo = new Photo(registerListingDTO.getUuid(), registerListingDTO.getImgPath(), null,newListing);
@@ -41,9 +53,14 @@ public class ListingService {
         }
     }
 
-//    public List<ResponseListingListDTO> getAllListings(){
-//        return  listingRepository.allListings();
-//    }
+    public List<ResponseListingListDTO> getAllListings(ListingSearchCondition condition){
+        Category category = null;
+        if(StringUtils.hasText(condition.getCategory())){
+            category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
+
+        }
+        return  listingRepository.listingListBySearch(condition, category);
+    }
 
     public ResponseGetListingDTO getListingById(Integer listing_id) {
         Listing listing = listingRepository.findById(listing_id)
@@ -59,4 +76,6 @@ public class ListingService {
                 listingRepository.getListingsByUserId(userId);
         return result;
     }
+
+
 }

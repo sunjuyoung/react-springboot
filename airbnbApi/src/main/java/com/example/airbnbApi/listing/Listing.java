@@ -60,7 +60,7 @@ public class Listing extends BaseTime {
     private List<Review> reviews;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "listings")
+    @ManyToMany(mappedBy = "listings", cascade = {CascadeType.ALL})
     private Set<Category> categories = new HashSet<>();
 
 
@@ -77,10 +77,16 @@ public class Listing extends BaseTime {
 
 
 
+
+
+    public void setCategory(Category category){
+        categories.add(category);
+        category.getListings().add(this);
+    }
     /**
      * 생성메서드
      */
-    public static Listing createListing(Account account, RegisterListingDTO dto, Category category){
+    public static Listing createListing(Account account, RegisterListingDTO dto, Set<Category> category){
         Listing listing = Listing.builder()
                 .description(dto.getDescription())
                 .title(dto.getTitle())
@@ -91,10 +97,12 @@ public class Listing extends BaseTime {
                 .roomCount(dto.getRoomCount())
                 .host(account)
                 .imageSrc(dto.getImgPath())
-                .categories(Set.of(category))
+                //.categories(category)
                 .build();
-        category.getListings().add(listing);
 
+        for(Category c : category){
+            listing.setCategory(c);
+        }
 
         return listing;
     }

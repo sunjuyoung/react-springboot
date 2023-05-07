@@ -41,4 +41,5 @@ mybatis:
 
 logging:
   level:
+    com.example.airbnbApi: debug
     org.hibernate.sql: debug

@@ -27,7 +27,7 @@ public class RegisterListingDTO {
 
     private int guestCount;
 
-    private String category;
+    private String[] category;
 
     private String imgPath;
 
