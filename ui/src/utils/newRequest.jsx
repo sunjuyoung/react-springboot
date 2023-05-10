@@ -5,13 +5,10 @@ const newRequest = axios.create({
   // withCredentials: true,
 });
 
-export const getAllListing = async (token, locationValue) => {
-  const response = await newRequest.get(
-    `/listing?locationValue=${locationValue}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+export const getAllListing = async (token, url) => {
+  const response = await newRequest.get(`/listing${url}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 

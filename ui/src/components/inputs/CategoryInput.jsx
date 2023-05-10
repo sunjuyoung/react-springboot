@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const CategoryBox = ({ Icon, label, selected, onClick }) => {
   return (
     <div

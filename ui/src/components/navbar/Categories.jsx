@@ -97,14 +97,14 @@ export const categories = [
 ];
 
 const Categories = () => {
-  const params = useSearchParams();
-  const category = params?.get("category");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category");
   const pathname = parsePath();
   const isMainPage = pathname === "/";
 
-  if (!isMainPage) {
-    return null;
-  }
+  // if (!isMainPage) {
+  //   return null;
+  // }
 
   return (
     <Container>
@@ -113,7 +113,7 @@ const Categories = () => {
           <CategoryBox
             key={item.label}
             label={item.label}
-            icon={item.icon}
+            Icon={item.icon}
             selected={category === item.label}
           />
         ))}

@@ -11,6 +11,8 @@ const ListingReservation = ({
   onSubmit,
   disabled,
   disabledDates,
+  startDate,
+  endDate,
 }) => {
   const handleChange = (ranges) => {
     onChangeDate(ranges.selection);
@@ -27,8 +29,8 @@ const ListingReservation = ({
       "
     >
       <div className="flex flex-row items-center gap-1 p-4 ">
-        <div className="text-2xl font-semibold">$ {price}</div>
-        <div className="font-light text-neutral-600">night</div>
+        <div className="text-2xl font-semibold">$ {price} </div>
+        <div className="text-lg font-light text-neutral-600"> /박</div>
       </div>
       <hr />
 
@@ -39,8 +41,9 @@ const ListingReservation = ({
         onChange={handleChange}
         direction="vertical"
         showDateDisplay={false}
-        minDate={new Date()}
-        // disabledDates={disabledDates}
+        minDate={new Date(startDate)}
+        maxDate={new Date(endDate)}
+        disabledDates={disabledDates}
       />
 
       <hr />

@@ -3,6 +3,7 @@ import { format } from "date-fns";
 
 import Button from "../Button";
 import { Navigate, useNavigate } from "react-router-dom";
+import HeartButton from "../HeartButton";
 
 const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
   const navigate = useNavigate();
@@ -17,6 +18,13 @@ const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
 
     return `${format(start, "PP")} - ${format(end, "PP")}`;
   }, [reservation]);
+
+  const listingDate = useMemo(() => {
+    const start = new Date(data.startDate);
+    const end = new Date(data.endDate);
+
+    return `${format(start, "PP")} - ${format(end, "PP")}`;
+  }, [data]);
 
   // const handleCancel = useCallback(
   //   (e) => {
@@ -39,17 +47,6 @@ const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
   //   return data.price;
   // }, [reservation, data.price]);
 
-  // const reservationDate = useMemo(() => {
-  //   if (!reservation) {
-  //     return null;
-  //   }
-
-  //   const start = new Date(reservation.startDate);
-  //   const end = new Date(reservation.endDate);
-
-  //   return `${format(start, "PP")} - ${format(end, "PP")}`;
-  // }, [reservation]);
-
   return (
     <div
       onClick={() => navigate(`/listing/${data.listing_id}`)}
@@ -62,19 +59,22 @@ const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
             src={`images/listing/${data.image_src}`}
             alt="Listing"
           />
+          <div className="absolute top-5 right-5">
+            <HeartButton />
+          </div>
         </div>
         <div className="text-lg font-semibold">{data.location}</div>
         <div className="font-light text-neutral-500">
-          {reservationDate || data.category}
+          {reservationDate || listingDate}
         </div>
         <div className="flex flex-row items-center gap-1">
           <div className="font-semibold">
             {data.totalPrice || data.price} 원
           </div>
-          <div className="font-light">night</div>
+          <div className="font-light">/박</div>
         </div>
 
-        <Button label={buttonLabel} />
+        {/* <Button label={buttonLabel} /> */}
       </div>
     </div>
   );

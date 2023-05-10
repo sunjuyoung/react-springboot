@@ -39,7 +39,7 @@ const UserMenu = ({ user }) => {
           onClick={onListingForm}
           className="hidden px-4 py-3 text-sm font-semibold transition rounded-full cursor-pointer md:block hover:bg-neutral-100"
         >
-          Airbnb your home
+          당신의 공간을 에어비앤비하세요
         </div>
         <div
           onClick={toggleOpen}
@@ -103,7 +103,7 @@ const UserMenu = ({ user }) => {
                     navigate("/properties");
                   }}
                 />
-                <MenuItem label="Airbnb your home" onClick={() => {}} />
+
                 <hr />
                 <MenuItem label="Logout" onClick={() => logoutHandle()} />
               </>

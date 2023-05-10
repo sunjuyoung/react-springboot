@@ -6,7 +6,12 @@ import CountrySelect from "../inputs/CountrySelect";
 import Heading from "../Heading";
 import Map from "../../components/Map";
 import useSearchModal from "../../hooks/useSearchModal";
-import { useNavigate, useParams, Navigate } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  Navigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import newRequest from "../../utils/newRequest";
@@ -17,13 +22,14 @@ const SearchLocationModal = () => {
 
   const [location, setLocation] = useState(null);
   const params = useParams();
-  console.log(location);
+  const [searchParams, setSearchParams] = useSearchParams();
+  let categoryParam = searchParams.get("category");
 
   const onSubmit = useCallback(async () => {
     let currentQuery = {};
 
-    if (params) {
-      currentQuery = qs.parse(params.toString());
+    if (categoryParam) {
+      currentQuery = { category: categoryParam };
     }
 
     const updatedQuery = {
@@ -31,7 +37,7 @@ const SearchLocationModal = () => {
       locationValue: location?.label,
     };
 
-    console.log(updatedQuery);
+    // console.log(updatedQuery);
     const url = qs.stringifyUrl(
       {
         url: "",
@@ -39,7 +45,7 @@ const SearchLocationModal = () => {
       },
       { skipNull: true }
     );
-    console.log(url);
+    // console.log(url);
 
     searchModal.onClose();
     navigate(url);

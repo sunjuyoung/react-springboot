@@ -4,8 +4,6 @@ import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Heading from "../../components/Heading";
 import ListingInfo from "../../components/listing/ListingInfo";
-import Button from "../../components/Button";
-import { DateRange, Range, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { useState } from "react";
@@ -18,16 +16,6 @@ import { useEffect } from "react";
 import HeartButton from "../../components/HeartButton";
 
 const ListingPage = () => {
-  const initialDateRange = {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  };
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  });
   const param = useParams();
   const token = useSelector((state) => state?.token);
   const user = useSelector((state) => state?.user);
@@ -35,6 +23,11 @@ const ListingPage = () => {
   const [totalPrice, setTotalPrice] = useState(1000);
   const reservations = [];
   const queryClient = useQueryClient();
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -62,22 +55,7 @@ const ListingPage = () => {
         setTotalPrice(listing?.price);
       }
     }
-  }, [dateRange, listing?.price]);
-
-  const disabledDates = () => {
-    let dates = [];
-
-    reservations?.forEach((reservation) => {
-      const range = eachDayOfInterval({
-        start: new Date(reservation?.startDate),
-        end: new Date(reservation?.endDate),
-      });
-
-      dates = [...dates, ...range];
-    });
-
-    return dates;
-  };
+  }, [dateRange, listing]);
 
   //create reservation
   const mutatioReservation = useMutation({
@@ -106,7 +84,20 @@ const ListingPage = () => {
   if (isLoading) {
     return <span>Loading..</span>;
   }
-  console.log(dateRange);
+  const disabledDates = () => {
+    let dates = [];
+
+    reservations.forEach((reservation) => {
+      const range = eachDayOfInterval({
+        start: new Date(reservation.startDate),
+        end: new Date(reservation.endDate),
+      });
+
+      dates = [...dates, ...range];
+    });
+
+    return dates;
+  };
 
   return (
     <div
@@ -125,11 +116,27 @@ xl:px-20 md:px-10 px-4 sm:px-2"
           relative
         "
           >
-            <img
-              src={`/images/listing/${listing.imageSrc[0]}`}
-              className="object-cover w-full"
-              alt="Image"
-            />
+            <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-3xl overflow-hidden">
+              <img
+                src={`/images/listing/${listing.imageSrc[0]}`}
+                className="object-cover aspect-square"
+                alt="Image"
+              />
+              <div className="grid">
+                <img
+                  src={`/images/listing/${listing.imageSrc[0]}`}
+                  className="object-cover aspect-square"
+                  alt="Image"
+                />
+                <div className="overflow-hidden">
+                  <img
+                    src={`/images/listing/${listing.imageSrc[0]}`}
+                    className="relative object-cover cursor-pointer aspect-square top-2"
+                    alt="Image"
+                  />
+                </div>
+              </div>
+            </div>
 
             <div className="absolute top-5 right-5">
               <HeartButton listingId={listing_id} currentUser={user} />
@@ -161,9 +168,11 @@ xl:px-20 md:px-10 px-4 sm:px-2"
                   }))
                 }
                 dateRange={dateRange}
+                startDate={listing.startDate}
+                endDate={listing.endDate}
                 onSubmit={onCreateReservation}
                 disabled={isLoading}
-                disabledDates={disabledDates}
+                disabledDates={disabledDates()}
               />
             </div>
           </div>

@@ -1,17 +1,19 @@
 import qs from "query-string";
-//import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const CategoryBox = ({ Icon, label, selected }) => {
   const navigate = useNavigate();
-  const params = useSearchParams();
+
+  const params = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  let locationParams = searchParams.get("locationValue");
 
   const handleClick = useCallback(() => {
     let currentQuery = {};
 
-    if (params) {
-      currentQuery = qs.parse(params.toString());
+    if (locationParams) {
+      currentQuery = { locationValue: locationParams };
     }
 
     const updatedQuery = {
@@ -20,7 +22,7 @@ const CategoryBox = ({ Icon, label, selected }) => {
     };
 
     //두번 클릭시 제거
-    if (params?.get("category") === label) {
+    if (searchParams.get("category") === label) {
       delete updatedQuery.category;
     }
 
@@ -32,8 +34,9 @@ const CategoryBox = ({ Icon, label, selected }) => {
       { skipNull: true }
     );
 
+    // console.log(url);
     navigate(url);
-  }, [label, router, params]);
+  }, [label, params, Icon]);
 
   return (
     <div

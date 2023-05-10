@@ -4,6 +4,7 @@ import Container from "../Container";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
 import { useSelector } from "react-redux";
+import Categories from "./Categories";
 
 const Navbar = () => {
   const user = useSelector((state) => state?.user);

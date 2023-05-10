@@ -22,7 +22,7 @@ const Search = () => {
           onClick={searchModal.onOpen}
           className="px-6 text-sm font-semibold cursor-pointer"
         >
-          AnyWhere
+          어디든지
         </div>
         <div
           className="
@@ -36,7 +36,7 @@ const Search = () => {
           text-center
         "
         >
-          Any Week
+          언제든
         </div>
         <div className="flex flex-row items-center gap-3 pl-6 pr-2 text-sm text-gray-600 ">
           <div className="hidden cursor-pointer sm:block">search</div>

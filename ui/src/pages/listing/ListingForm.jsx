@@ -18,14 +18,24 @@ import newRequest from "../../utils/newRequest";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { DateRange } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
+import PhotosUpload from "../../components/inputs/PhotosUpload";
 
 const ListingForm = () => {
   const token = useSelector((state) => state?.token);
   const user = useSelector((state) => state?.user);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [imagePreview, setImagePreview] = useState(null);
+  const [addedPhotos, setAddedPhotos] = useState([]);
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
+  });
 
   const {
     register,
@@ -36,7 +46,7 @@ const ListingForm = () => {
     reset,
   } = useForm({
     defaultValues: {
-      category: "",
+      category: [],
       location: null,
       guestCount: 1,
       roomCount: 1,
@@ -47,12 +57,13 @@ const ListingForm = () => {
       description: "",
     },
   });
+  const dateChekc = dateRange.endDate.getTime() === new Date().getTime();
 
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
-  }, []);
+  }, [dateRange]);
 
   const mutation = useMutation({
     mutationFn: (listing) => {
@@ -69,7 +80,10 @@ const ListingForm = () => {
 
   const saveImage = async () => {
     const formData = new FormData();
-    formData.append("file", image);
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("file", files[i]);
+    }
 
     const savedUserImageResponse = await axios.post(
       "http://localhost:8081/image/upload",
@@ -93,6 +107,8 @@ const ListingForm = () => {
       imgPath: result.data.link,
       uuid: result.data.uuid,
       latlng: JSON.stringify(location.latlng),
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
     });
   };
 
@@ -111,19 +127,40 @@ const ListingForm = () => {
     });
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(event.target.files[0]);
-    if (!file) {
-      setImagePreview(null);
-      return;
+  // const handleImageChange = (event) => {
+  //   const file = event.target.files[0];
+  //   setImage(event.target.files[0]);
+  //   if (!file) {
+  //     setImagePreview(null);
+  //     return;
+  //   }
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => {
+  //     setImagePreview(reader.result);
+  //     console.log(reader.result);
+  //     // onChange(file);
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
+
+  const handleCategories = (ca, item) => {
+    //      두번 클릭시 제거
+    if (category.includes(ca)) {
+      const editCategory = category.filter((c) => c !== ca);
+      setCustomValue("category", editCategory);
+    } else {
+      category.length > 3
+        ? toast.error("카테고리 설정 초과.")
+        : setCustomValue("category", [...category, ca]);
     }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-      onChange(file);
-    };
-    reader.readAsDataURL(file);
+  };
+
+  const handleChange = (ranges) => {
+    setDateRange((prev) => ({
+      ...prev,
+      startDate: ranges.selection.startDate,
+      endDate: ranges.selection.endDate,
+    }));
   };
 
   return (
@@ -150,8 +187,8 @@ const ListingForm = () => {
           {categories.map((item) => (
             <div key={item.label} className="col-span-1">
               <CategoryInput
-                onClick={(category) => setCustomValue("category", category)}
-                selected={category == item.label}
+                onClick={(ca) => handleCategories(ca, item.icon)}
+                selected={category?.includes(item.label)}
                 label={item.label}
                 Icon={item.icon}
               />
@@ -202,7 +239,11 @@ const ListingForm = () => {
             title="사진"
             subtitle="Show guests what your place looks like!"
           />
-          {imagePreview && (
+
+          <PhotosUpload
+            onChange={(value) => setImage(() => [...image, value])}
+          />
+          {/* {imagePreview && (
             <div className="w-full h-full ">
               <img
                 src={imagePreview}
@@ -217,7 +258,7 @@ const ListingForm = () => {
             id="image-input"
             accept="image/*"
             onChange={handleImageChange}
-          />
+          /> */}
 
           {/* <ImageUpload onChange={(value) => setImage(value)} value={imageSrc} /> */}
         </div>
@@ -243,20 +284,39 @@ const ListingForm = () => {
         {/* 가격 */}
         <div className="flex flex-col gap-8 mt-4">
           <Heading title="가격" subtitle="How much do you charge per night?" />
-          <Input
-            id="price"
-            label="Price"
-            formatPrice
-            type="number"
-            register={register}
-            errors={errors}
-            required
-          />
+          <div className="flex col-span-2">
+            <Input
+              id="price"
+              label="Price"
+              formatPrice
+              type="number"
+              register={register}
+              errors={errors}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-8 mt-4 ">
+          <Heading title="날짜" subtitle=" " />
+          <div>
+            <DateRange
+              rangeColors={["#262626"]}
+              ranges={[dateRange]}
+              date={new Date()}
+              onChange={handleChange}
+              direction="vertical"
+              showDateDisplay={false}
+              minDate={new Date()}
+              // disabledDates={disabledDates}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-2 p-6">
           <div className="flex flex-row items-center w-full gap-4 ">
             <Button
+              disabled={dateChekc}
               label={"저장"}
               onClick={handleSubmit(listingSubmit)}
               outline

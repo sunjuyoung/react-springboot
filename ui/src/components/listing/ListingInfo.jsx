@@ -17,7 +17,8 @@ const ListingInfo = ({
 }) => {
   //카테고리
   const cate = useMemo(() => {
-    return categories.find((items) => items.label === category);
+    return categories.filter((item) => category?.includes(item.label));
+    //return categories.find((items) => items.label === category);
   }, [category]);
 
   //지역
@@ -27,7 +28,7 @@ const ListingInfo = ({
     <div className="flex flex-col col-span-4 gap-8">
       <div className="flex flex-col gap-2">
         <div className="flex flex-row items-center gap-2 text-xl font-semibold ">
-          <div>Hosted by {username}</div>
+          <div>호스트 : {username}</div>
           <Avatar src={null} />
         </div>
         <div className="flex flex-row items-center gap-4 font-light text-neutral-500">
@@ -37,21 +38,22 @@ const ListingInfo = ({
         </div>
       </div>
       <hr />
-      {category && (
-        <>
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-row items-center gap-4">
-              <cate.icon size={40} className="text-neutral-600" />
+
+      <div className="flex flex-row gap-6">
+        {cate.map((c) => (
+          <div key={c.label} className="flex gap-2">
+            <div className="flex flex-row items-center gap-2">
+              <c.icon size={40} className="text-neutral-600" />
               <div className="flex flex-col">
-                <div className="text-lg font-semibold">{cate.label}</div>
-                <div className="font-light text-neutral-500">
-                  {cate.description}
-                </div>
+                <div className="text-lg font-semibold">{c.label}</div>
+                {/* <div className="font-light text-neutral-500">
+                  {c.description}
+                </div> */}
               </div>
             </div>
           </div>
-        </>
-      )}
+        ))}
+      </div>
       <hr />
       <div className="text-lg font-light text-neutral-500">{description}</div>
       <hr />
