@@ -2,6 +2,7 @@ package com.example.airbnbApi.review;
 
 import com.example.airbnbApi.common.BaseTime;
 import com.example.airbnbApi.listing.Listing;
+import com.example.airbnbApi.review.dto.RegisterReviewDTO;
 import com.example.airbnbApi.user.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ public class Review extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    private Account reviewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable =false)
@@ -44,5 +45,14 @@ public class Review extends BaseTime {
         listing.getReviews().add(this);
     }
 
+    public static Review  createReview(Listing listing, Account account, RegisterReviewDTO dto) {
+        Review review = Review.builder()
+                .comment(dto.getComment())
+                .listing(listing)
+                .rating(dto.getRating())
+                .reviewer(account)
+                .build();
+        return review;
 
+    }
 }

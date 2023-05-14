@@ -38,10 +38,10 @@ public class Photo {
         this.listing = listing;
     }
 
-    public void setPhoto(Listing listing){
-        this.listing = listing;
-        listing.getImages().add(this);
-    }
+//    public void setPhoto(Listing listing){
+//        this.listing = listing;
+//        listing.getImages().add(this);
+//    }
 
 
 

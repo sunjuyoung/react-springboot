@@ -37,14 +37,10 @@ public class ListingService {
     public void createListing(RegisterListingDTO registerListingDTO){
         Account account = userRepository.findByEmail(registerListingDTO.getEmail()).get();
 
-
         Set<String> setCategory = new HashSet<>(Set.of(registerListingDTO.getCategory()));
 
         Set<Category> categories = categoryRepository.findByNameIn(setCategory);
 
-
-        //List<String> categoryList = new ArrayList<>(Arrays.asList(registerListingDTO.getCategory()));
-       // Category category = categoryRepository.findByName(registerListingDTO.getCategory());
         Listing listing = Listing.createListing(account,registerListingDTO,categories);
         Listing newListing = listingRepository.save(listing);
         if(registerListingDTO.getImgPath() != null && !registerListingDTO.getImgPath().equals("")){
@@ -54,12 +50,16 @@ public class ListingService {
     }
 
     public List<ResponseListingListDTO> getAllListings(ListingSearchCondition condition){
-        Category category = null;
-        if(StringUtils.hasText(condition.getCategory())){
-            category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
 
-        }
-        return  listingRepository.listingListBySearch(condition, category);
+//
+//        Category category = null;
+//        if(StringUtils.hasText(condition.getCategory())){
+//            category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
+//        }
+//        return  listingRepository.listingListBySearch(condition, category);
+
+
+        return null;
     }
 
     public ResponseGetListingDTO getListingById(Integer listing_id) {
@@ -78,4 +78,16 @@ public class ListingService {
     }
 
 
+    public List<ResponseListingListDTO> getListingsWithSearch(ListingSearchCondition condition) {
+        Category category = null;
+        if(StringUtils.hasText(condition.getCategory())){
+            category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
+        }
+        List<Listing> listings = listingRepository.listingListFetchJoin(condition,category);
+
+        List<ResponseListingListDTO> result = listings.stream()
+                .map(listing -> new ResponseListingListDTO(listing))
+                .collect(Collectors.toList());
+        return result;
+    }
 }

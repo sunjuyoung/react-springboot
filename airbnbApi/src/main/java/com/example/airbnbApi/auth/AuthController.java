@@ -2,6 +2,7 @@ package com.example.airbnbApi.auth;
 
 
 import com.example.airbnbApi.valid.RegisterValidation;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,10 +27,11 @@ public class AuthController {
         webDataBinder.addValidators(registerValidation);
     }
 
+
     @PostMapping(value = "/register",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest, Errors errors){
         if(errors.hasErrors()){
-            return ResponseEntity.badRequest().body(errors.getFieldError());
+            return ResponseEntity.badRequest().body(errors.getAllErrors());
         }
         service.register(registerRequest);
         return ResponseEntity.ok().body("success");

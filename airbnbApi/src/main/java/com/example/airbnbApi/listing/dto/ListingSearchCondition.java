@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ListingSearchCondition {
 
     private String locationValue;
@@ -23,11 +24,7 @@ public class ListingSearchCondition {
     private LocalDate endDate;
 
 
-    public ListingSearchCondition(String locationValue, String category, String keyword) {
-        this.locationValue = locationValue;
-        this.category = category;
-        this.keyword = keyword;
-    }
+
 
 
 }

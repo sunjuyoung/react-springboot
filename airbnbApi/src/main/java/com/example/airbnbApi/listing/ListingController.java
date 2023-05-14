@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,11 +24,10 @@ import java.util.List;
 public class ListingController {
 
     private final ListingService listingService;
-    private final ListingMapper mapper;
+    //private final ListingMapper mapper;
 
     @PostMapping
     public ResponseEntity<?> addListing(@RequestBody RegisterListingDTO dto){
-       // log.info(dto.getCategory());
         listingService.createListing(dto);
         return ResponseEntity.ok().body("success");
     }
@@ -36,14 +36,14 @@ public class ListingController {
     @GetMapping
     public ResponseEntity<?> getAllListings(@RequestParam(value = "locationValue",required = false)String locationValue
                                             ,@RequestParam(value = "category",required = false)String category
-                                            ,@RequestParam(value = "keyword",required = false)String keyword){
-//         ,@RequestParam(value = "startDate",required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate startDate
-//          @RequestParam(value = "endDate",required = false) LocalDate endDate
-
-        ListingSearchCondition condition = new ListingSearchCondition(locationValue,category,keyword);
-       // List<ResponseListingListDTO> result = listingService.getAllListings(condition);
-        List<ListingVO> allListings = mapper.getAllListings(condition);
-        return ResponseEntity.ok().body(allListings);
+                                            ,@RequestParam(value = "keyword",required = false)String keyword
+         ,@RequestParam(value = "startDate",required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate startDate
+            ,@RequestParam(value = "endDate",required = false)   @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate endDate ){
+        ListingSearchCondition condition = new ListingSearchCondition(locationValue,category,keyword, startDate,endDate);
+        //List<ResponseListingListDTO> result = listingService.getAllListings(condition);
+        //List<ListingVO> allListings = mapper.getAllListings(condition);
+        List<ResponseListingListDTO> test = listingService.getListingsWithSearch(condition);
+        return ResponseEntity.ok().body(test);
     }
 
     @GetMapping("/{listing_id}")

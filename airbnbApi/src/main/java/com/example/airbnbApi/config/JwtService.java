@@ -1,10 +1,7 @@
 package com.example.airbnbApi.config;
 
 import com.example.airbnbApi.config.exception.AccessTokenException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +28,7 @@ public class JwtService {
     private long refreshExpiration;
 
 
-    public String extractUsername(String token) {
+    public String extractUsername(String token)   {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -58,7 +55,7 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token,UserDetails userDetails){
+    public boolean isTokenValid(String token,UserDetails userDetails)  {
         String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }

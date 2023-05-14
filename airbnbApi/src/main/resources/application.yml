@@ -21,8 +21,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show_sql: true
+        default_batch_fetch_size: 100
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
 
 
   servlet:

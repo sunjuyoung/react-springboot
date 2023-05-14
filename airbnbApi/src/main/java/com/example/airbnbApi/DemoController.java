@@ -1,9 +1,6 @@
 package com.example.airbnbApi;
 
-import com.example.airbnbApi.common.Photo;
-import com.example.airbnbApi.common.PhotoRepository;
-import com.example.airbnbApi.common.PhotoService;
-import com.example.airbnbApi.common.UploadResponse;
+import com.example.airbnbApi.common.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +26,6 @@ import java.util.UUID;
 public class DemoController {
 
     private final PhotoService photoService;
-//    private final PhotoRepository photoRepository;
 
 
     @Value("${airbnb.upload.path}")
@@ -52,39 +48,66 @@ public class DemoController {
                 .body(img);
     }
 
+    @PostMapping(value = "/uploads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadPhotos(UploadDTO uploadDTO){
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> upload(MultipartFile file){
+        if(uploadDTO != null){
+            List<String> list = new ArrayList<>();
+            uploadDTO.getFiles().forEach(multiFile->{
+            String originalName = multiFile.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String type  = multiFile.getContentType();
 
-        if(file != null){
-            //List<uploadResponse> list = new ArrayList<>();
-//            uploadDTO.files().forEach(multiFile->{
-                String originalName = file.getOriginalFilename();
-                String uuid = UUID.randomUUID().toString();
-                String type  = file.getContentType();
+            Path savePath = Paths.get(uploadPath, uuid+"_"+ originalName);
 
-                Path savePath = Paths.get(uploadPath, uuid+"_"+ originalName);
+            try {
+                multiFile.transferTo(savePath);
 
-                try {
-                    file.transferTo(savePath);
+            }catch (IOException e){
 
-                }catch (IOException e){
+            }
 
-                }
-                //list.add(new uploadResponse(uuid,originalName));
-                uploadResponse uploadImage = new uploadResponse(uuid,originalName,type);
+            uploadResponse uploadImage = new uploadResponse(uuid,originalName,type);
+                list.add(uploadImage.getLink());
 
-
-//            });
-            return ResponseEntity.ok().body(uploadImage);
+       });
+            return ResponseEntity.ok().body(list);
         }
 
         return null;
     }
 
+//    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<?> upload(MultipartFile file){
+//
+//        if(file != null){
+//            //List<uploadResponse> list = new ArrayList<>();
+////            uploadDTO.files().forEach(multiFile->{
+//                String originalName = file.getOriginalFilename();
+//                String uuid = UUID.randomUUID().toString();
+//                String type  = file.getContentType();
+//
+//                Path savePath = Paths.get(uploadPath, uuid+"_"+ originalName);
+//
+//                try {
+//                    file.transferTo(savePath);
+//
+//                }catch (IOException e){
+//
+//                }
+//                //list.add(new uploadResponse(uuid,originalName));
+//                uploadResponse uploadImage = new uploadResponse(uuid,originalName,type);
+//
+//
+////            });
+//            return ResponseEntity.ok().body(uploadImage);
+//        }
+//
+//        return null;
+//    }
 
-    record uploadDTO(List<MultipartFile> files){
-    }
+
+
 
     record uploadResponse(
             String uuid,

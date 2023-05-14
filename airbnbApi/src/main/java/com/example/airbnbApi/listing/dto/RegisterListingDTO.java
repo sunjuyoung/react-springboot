@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +33,8 @@ public class RegisterListingDTO {
 
     private String[] category;
 
+    private Set<String> images;
+
     private String imgPath;
 
     private String uuid;
@@ -36,4 +42,7 @@ public class RegisterListingDTO {
     private String latlng;
 
     private String icon;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
 }

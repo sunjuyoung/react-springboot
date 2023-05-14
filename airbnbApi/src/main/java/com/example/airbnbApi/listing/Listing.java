@@ -13,9 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -55,27 +58,35 @@ public class Listing extends BaseTime {
 
     private String imageSrc;
 
+    @Column(nullable = false)
+    private LocalDate startDate;
+    @Column(nullable = false)
+    private LocalDate endDate;
+
 
     @OneToMany(mappedBy = "listing")
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
 
     @Builder.Default
     @ManyToMany(mappedBy = "listings", cascade = {CascadeType.ALL})
     private Set<Category> categories = new HashSet<>();
 
-
-
     @Builder.Default
-    @OneToMany(mappedBy = "listing", cascade = {CascadeType.ALL})
-    private Set<Photo> images = new HashSet<>();
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+            name = "listing_images",
+            joinColumns = @JoinColumn(name = "image_id")
+    )
+    @Column(name = "images")
+    private Set<String> images = new HashSet<>();
+//
+//    @Builder.Default
+//    @OneToMany(mappedBy = "listing", cascade = {CascadeType.ALL})
+//    private Set<Photo> images = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account host;
-
-
-
-
 
 
 
@@ -96,8 +107,10 @@ public class Listing extends BaseTime {
                 .guestCount(dto.getGuestCount())
                 .roomCount(dto.getRoomCount())
                 .host(account)
-                .imageSrc(dto.getImgPath())
-                //.categories(category)
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .images(dto.getImages().stream().collect(Collectors.toSet()))
+                .imageSrc(dto.getImages().stream().findFirst().get())
                 .build();
 
         for(Category c : category){

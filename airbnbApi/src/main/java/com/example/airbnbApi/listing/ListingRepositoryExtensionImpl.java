@@ -6,6 +6,7 @@ import com.example.airbnbApi.listing.dto.ListingSearchCondition;
 import com.example.airbnbApi.listing.dto.QResponseListingListDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
 import com.example.airbnbApi.reservation.QReservation;
+import com.example.airbnbApi.review.QReview;
 import com.example.airbnbApi.user.QAccount;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
@@ -31,8 +32,10 @@ import java.util.List;
 import static com.example.airbnbApi.category.QCategory.*;
 import static com.example.airbnbApi.listing.QListing.*;
 import static com.example.airbnbApi.reservation.QReservation.*;
+import static com.example.airbnbApi.review.QReview.*;
 import static com.example.airbnbApi.user.QAccount.*;
 import static com.querydsl.jpa.JPAExpressions.select;
+import static com.querydsl.jpa.JPAExpressions.selectDistinct;
 import static org.springframework.util.StringUtils.*;
 
 public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport implements ListingRepositoryExtension {
@@ -56,15 +59,6 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
 
     @Override
     public List<ResponseListingListDTO> listingListBySearch(ListingSearchCondition condition,Category category) {
-//        BooleanBuilder builder = new BooleanBuilder();
-//        if(hasText(condition.getLocationValue())){
-//            builder.and(listing.map.location.eq(condition.getLocationValue()));
-//        }
-//        if(condition.getStartDate() != null && condition.getEndDate() != null){
-//            builder.and(reservation.startDate.lt(condition.getStartDate()).and(
-//                    reservation.endDate.gt(condition.getStartDate())));
-//
-//        }
 
         JPQLQuery<ResponseListingListDTO> listings = listingList();
 
@@ -75,7 +69,27 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
                 categoryEq(category)
         ).fetch();
 
+
+
         return fetch;
+    }
+
+    @Override
+    public List<Listing> listingListFetchJoin(ListingSearchCondition condition, Category category) {
+        List<Listing> result = listingListFetchJoin().where(
+                locationEq(condition.getLocationValue()),
+                dateEq(condition.getStartDate(), condition.getEndDate()),
+                categoryEq(category)
+        ).fetch();
+        return result;
+    }
+
+    @Override
+    public Listing getListingByIdFetchJoin(Integer listing_id) {
+        listingListFetchJoin().where(
+                account.id.eq(listing_id)
+        ).fetch();
+        return null;
     }
 
     private BooleanExpression locationEq(String locationValue){
@@ -91,9 +105,7 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
 
     private BooleanExpression dateEq(LocalDate startDate ,LocalDate endDate){
         if(startDate != null && endDate != null){
-           return reservation.startDate.lt(startDate).and(reservation.endDate.gt(startDate))
-                   .or(reservation.startDate.lt(endDate).and(reservation.endDate.gt(endDate)));
-
+           return listing.startDate.lt(startDate).and(listing.endDate.gt(endDate));
         }
         return null;
     }
@@ -102,16 +114,34 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
        return from(listing)
                 .innerJoin(account).on(listing.host.eq(account))
                 .leftJoin(reservation).on(reservation.listing.eq(listing))
-               .leftJoin(category).fetchJoin().distinct()
+                .leftJoin(category)
+                .leftJoin(listing.reviews,review).fetchJoin()
                 .select(new QResponseListingListDTO(
                         listing.id,
                         account.id,
                         listing.title,
                         listing.map.location,
                         listing.price,
-                        listing.imageSrc
+                        listing.imageSrc,
+                        listing.startDate,
+                        listing.endDate
                 ));
     }
+
+    private JPQLQuery<Listing> listingListFetchJoin(){
+
+       return from(listing).distinct()
+                .innerJoin(account).on(listing.host.eq(account))
+                .leftJoin(reservation).on(reservation.listing.eq(listing))
+                .leftJoin(category).fetchJoin()
+                .leftJoin(listing.reviews, review).fetchJoin()
+                .select(listing);
+
+
+
+
+    }
+
 
 
 }

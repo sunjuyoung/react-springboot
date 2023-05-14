@@ -14,4 +14,8 @@ public interface ListingRepositoryExtension  {
      List<ResponseListingListDTO> getListingsByUserId(Integer userId);
 
      List<ResponseListingListDTO> listingListBySearch(ListingSearchCondition condition, Category category);
+
+     List<Listing> listingListFetchJoin(ListingSearchCondition condition, Category category);
+
+     Listing getListingByIdFetchJoin(Integer listing_id);
 }

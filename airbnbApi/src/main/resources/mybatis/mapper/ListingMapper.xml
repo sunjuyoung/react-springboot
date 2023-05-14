@@ -5,7 +5,7 @@
 
 
     <select id="getAllListings" resultType="com.example.airbnbApi.listing.vo.ListingVO">
-        SELECT l.listing_id AS listing_id, l.title, l.location, l.price,l.image_src,
+        SELECT distinct l.listing_id AS listing_id, l.title, l.location, l.price,l.image_src,
                (SELECT STRING_AGG(c.name, ', ')
                 FROM category c
                 INNER JOIN listing_category lc ON c.category_id = lc.category_id
