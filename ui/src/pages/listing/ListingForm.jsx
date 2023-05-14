@@ -80,13 +80,13 @@ const ListingForm = () => {
 
   const saveImage = async () => {
     const formData = new FormData();
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append("file", files[i]);
+    //formData.append("file", image[0]);
+    for (let i = 0; i < image?.length; i++) {
+      formData.append("files", image[i]);
     }
 
     const savedUserImageResponse = await axios.post(
-      "http://localhost:8081/image/upload",
+      "http://localhost:8081/image/uploads",
       formData,
       {
         headers: {
@@ -99,13 +99,15 @@ const ListingForm = () => {
 
   const listingSubmit = async (data) => {
     const result = await saveImage();
+    console.log(result.data);
 
     mutation.mutate({
       ...data,
       location: location.label,
       email: user.email,
-      imgPath: result.data.link,
-      uuid: result.data.uuid,
+      // imgPath: result.data.link,
+      // uuid: result.data.uuid,
+      images: result.data,
       latlng: JSON.stringify(location.latlng),
       startDate: dateRange.startDate,
       endDate: dateRange.endDate,
@@ -282,9 +284,9 @@ const ListingForm = () => {
           />
         </div>
         {/* 가격 */}
-        <div className="flex flex-col gap-8 mt-4">
+        <div className="flex flex-col col-span-2 gap-8 ">
           <Heading title="가격" subtitle="How much do you charge per night?" />
-          <div className="flex col-span-2">
+          <div className="grid grid-cols-3 ">
             <Input
               id="price"
               label="Price"

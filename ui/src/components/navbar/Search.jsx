@@ -1,8 +1,10 @@
 import React from "react";
 import useSearchModal from "../../hooks/useSearchModal";
+import useDateSearchModal from "../../hooks/useDateSearchModal";
 
 const Search = () => {
   const searchModal = useSearchModal();
+  const dateSearchModal = useDateSearchModal();
   return (
     <div
       className="
@@ -20,11 +22,12 @@ const Search = () => {
       <div className="flex flex-row items-center justify-between ">
         <div
           onClick={searchModal.onOpen}
-          className="px-6 text-sm font-semibold cursor-pointer"
+          className="px-6 text-sm font-semibold cursor-pointer hover:text-base "
         >
           어디든지
         </div>
         <div
+          onClick={dateSearchModal.onOpen}
           className="
           hidden 
           sm:block 
@@ -34,6 +37,8 @@ const Search = () => {
           border-x-[1px] 
           flex-1 
           text-center
+          cursor-pointer
+          hover:text-base
         "
         >
           언제든

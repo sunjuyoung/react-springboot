@@ -13,12 +13,14 @@ import TripPage from "./pages/trip/TripPage";
 import FavoritesPage from "./pages/favorites/FavoritesPage";
 import PropertiesPage from "./pages/properties/PropertiesPage";
 import SearchLocationModal from "./components/modal/SearchLocationModal";
+import SearchDateModal from "./components/modal/SearchDateModal";
 
 function App() {
   const Layout = () => {
     return (
       <div className="app">
         <Navbar />
+        <SearchDateModal />
         <SearchLocationModal />
         <Outlet />
         <Toaster />

@@ -55,7 +55,10 @@ const ListingInfo = ({
         ))}
       </div>
       <hr />
-      <div className="text-lg font-light text-neutral-500">{description}</div>
+      <div className="text-lg font-light text-neutral-500">
+        <p className="mb-3 font-bold">숙소 정보</p>
+        {description}
+      </div>
       <hr />
       <Map center={lat} />
     </div>

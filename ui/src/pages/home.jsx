@@ -15,6 +15,7 @@ const home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   let locationValue = searchParams.get("locationValue");
   let category = searchParams.get("category");
+  let startDate = searchParams.get("startDate");
   const queryClient = useQueryClient();
   const currentParams = Object.fromEntries([...searchParams]);
 
@@ -24,11 +25,11 @@ const home = () => {
     data: listings,
     error,
   } = useQuery(["listings"], async () => await getAllListing(token, ""), {
-    enabled: !locationValue && !category,
+    enabled: !locationValue && !category && !startDate,
   });
 
   useEffect(() => {
-    if (locationValue || category) {
+    if (locationValue || category || startDate) {
       const url = qs.stringifyUrl(
         {
           url: "",
@@ -50,7 +51,7 @@ const home = () => {
   if (isLoading) {
     return <span>Loading...</span>;
   }
-  if (listings.length === 0 && (category || locationValue)) {
+  if (!listings || (listings?.length === 0 && (category || locationValue))) {
     return (
       <>
         <EmptyState />
@@ -66,7 +67,7 @@ const home = () => {
 xl:px-20 md:px-10 px-4 sm:px-2"
       >
         <div className="grid grid-cols-1 gap-8 pt-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {listings.map((listing) => {
+          {listings?.map((listing) => {
             return (
               <ListingCard
                 key={listing.listing_id}

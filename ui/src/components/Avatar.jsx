@@ -2,7 +2,7 @@ import React from "react";
 
 const Avatar = ({ src }) => {
   return (
-    <div>
+    <>
       <img
         className="rounded-full"
         height="30"
@@ -10,7 +10,7 @@ const Avatar = ({ src }) => {
         alt="Avatar"
         src={src || "/images/placeholder.jpg"}
       />
-    </div>
+    </>
   );
 };
 

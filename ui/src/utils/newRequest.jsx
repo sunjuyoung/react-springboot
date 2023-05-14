@@ -65,4 +65,11 @@ export const getListingsListByUserId = async (id, token) => {
   return response.data;
 };
 
+export const getReviewsByListingId = async (id, token) => {
+  const response = await newRequest.get(`/review/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 export default newRequest;

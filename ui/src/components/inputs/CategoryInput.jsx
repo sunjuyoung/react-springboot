@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const CategoryBox = ({ Icon, label, selected, onClick }) => {
   return (
@@ -24,4 +24,4 @@ const CategoryBox = ({ Icon, label, selected, onClick }) => {
   );
 };
 
-export default CategoryBox;
+export default React.memo(CategoryBox);

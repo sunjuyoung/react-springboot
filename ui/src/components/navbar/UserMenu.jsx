@@ -85,20 +85,26 @@ const UserMenu = ({ user }) => {
             {user ? (
               <>
                 <MenuItem
-                  label="My trips"
+                  label="알림"
                   onClick={() => {
                     navigate("/trips");
                   }}
                 />
                 <MenuItem
-                  label="My favorites"
+                  label="여행"
+                  onClick={() => {
+                    navigate("/trips");
+                  }}
+                />
+                <MenuItem
+                  label="위시리스트"
                   onClick={() => {
                     navigate("/favorites");
                   }}
                 />
                 <MenuItem label="My reservations" onClick={() => {}} />
                 <MenuItem
-                  label="My properties"
+                  label="계정"
                   onClick={() => {
                     navigate("/properties");
                   }}

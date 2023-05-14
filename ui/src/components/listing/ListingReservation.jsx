@@ -52,7 +52,7 @@ const ListingReservation = ({
       </div>
       <hr />
       <div className="flex flex-row items-center justify-between p-4 text-lg font-semibold ">
-        <div>Total</div>
+        <div>총 합계:</div>
         <div>$ {totalPrice}</div>
       </div>
     </div>

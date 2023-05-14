@@ -14,6 +14,8 @@ import ListingReservation from "../../components/listing/ListingReservation";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import HeartButton from "../../components/HeartButton";
+import Avatar from "../../components/Avatar";
+import ListingReview from "../../components/listing/ListingReview";
 
 const ListingPage = () => {
   const param = useParams();
@@ -119,19 +121,19 @@ xl:px-20 md:px-10 px-4 sm:px-2"
             <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-3xl overflow-hidden">
               <img
                 src={`/images/listing/${listing.imageSrc[0]}`}
-                className="object-cover aspect-square"
+                className="relative object-cover w-screen aspect-square"
                 alt="Image"
               />
               <div className="grid">
                 <img
-                  src={`/images/listing/${listing.imageSrc[0]}`}
-                  className="object-cover aspect-square"
+                  src={`/images/listing/${listing.imageSrc[1]}`}
+                  className="relative object-cover w-screen aspect-square"
                   alt="Image"
                 />
                 <div className="overflow-hidden">
                   <img
-                    src={`/images/listing/${listing.imageSrc[0]}`}
-                    className="relative object-cover cursor-pointer aspect-square top-2"
+                    src={`/images/listing/${listing.imageSrc[2]}`}
+                    className="relative object-cover w-screen cursor-pointer aspect-square top-2"
                     alt="Image"
                   />
                 </div>
@@ -176,6 +178,11 @@ xl:px-20 md:px-10 px-4 sm:px-2"
               />
             </div>
           </div>
+          <hr />
+          {/* 리뷰 댓글 */}
+          <ListingReview listingId={listing_id} currentUser={user} />
+
+          <hr />
         </div>
       </div>
     </div>
