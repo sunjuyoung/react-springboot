@@ -45,7 +45,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full bg-white border-0 rounded-lg shadow-lg p-7 lg:h-auto md:h-auto">
+    <div className="flex flex-col justify-center w-auto h-full mx-auto bg-white border-0 rounded-lg shadow-lg p-7 lg:w-3/6 lg:h-auto md:h-auto">
       {/*header*/}
       <div
         className="
@@ -96,7 +96,7 @@ const Register = () => {
       {/*footer*/}
       <div className="flex flex-col gap-2 p-6">
         <div className="flex flex-row items-center w-full gap-4 ">
-          <Button label="Continue" onClick={handleSubmit(onSubmit)} />
+          <Button label="회원가입" onClick={handleSubmit(onSubmit)} />
         </div>
         {/* {footer} */}
 

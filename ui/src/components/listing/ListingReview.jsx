@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "../Avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getReviewsByListingId } from "../../utils/newRequest";
@@ -9,15 +9,21 @@ import { useEffect } from "react";
 
 const ListingReview = ({ listingId, currentUser }) => {
   const token = useSelector((state) => state?.token);
+  const [page, setPage] = useState(1);
 
   const {
     isLoading,
     isError,
     data: reviews,
     error,
+    isFetching,
+    isPreviousData,
   } = useQuery(
-    ["review"],
-    async () => await getReviewsByListingId(listingId, token)
+    ["review", page],
+    async () => await getReviewsByListingId(listingId, page, token),
+    {
+      keepPreviousData: true,
+    }
   );
 
   if (isError) {
@@ -27,24 +33,89 @@ const ListingReview = ({ listingId, currentUser }) => {
     return <span>Loading..</span>;
   }
 
-  if (!reviews || reviews.length === 0) {
+  if (!reviews || reviews.data.length === 0) {
     return (
       <>
         <EmptyReview disabledButton={true} />
       </>
     );
   }
+  if (isFetching) {
+    return <span>Loading..</span>;
+  }
+  const nextPage = (e) => {
+    e.preventDefault();
+    setPage((prev) => prev + 1);
+  };
+  const prevPage = (e) => {
+    e.preventDefault();
+    setPage((prev) => prev - 1);
+  };
+  const pageArray = Array(reviews.totalPage)
+    .fill()
+    .map((_, index) => index + 1);
 
-  console.log(reviews.length === 0);
+  const content = (
+    <div className="items-center justify-center mx-auto">
+      <nav aria-label="Page navigation example">
+        <ul className="inline-flex -space-x-px">
+          <li>
+            <a
+              onClick={prevPage}
+              href="#"
+              className={`px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 
+            rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700
+             dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white 
+             ${isPreviousData || page === 1 ? "hidden" : ""}`}
+            >
+              Previous
+            </a>
+          </li>
+
+          {pageArray.map((pg) => (
+            <li key={pg}>
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  setPage(pg);
+                }}
+                href="#"
+                className={`px-3 py-2 leading-tight  bg-white border border-gray-300
+               hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700
+                dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white
+                ${page === pg ? "bg-gray-800 text-white" : "text-gray-500"}
+                `}
+              >
+                {pg}
+              </a>
+            </li>
+          ))}
+
+          <li>
+            <a
+              onClick={nextPage}
+              href="#"
+              className={`px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg
+             hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 
+             dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white 
+             ${isPreviousData || page === reviews.totalPage ? "hidden" : ""}`}
+            >
+              Next
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
   return (
     <>
       <div className="pb-5 mb-2">
         <div className="py-10 text-lg font-bold">
-          <span>별점 후기 {reviews.length}개</span>
+          <span>별점 후기 {reviews.data.length}개</span>
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          {reviews.map((review) => (
+          {reviews.data.map((review) => (
             <div key={review.id} className="flex flex-col h-auto gap-2">
               <div className="grid gap-2 grid-cols-[50px,2fr_1fr] items-center">
                 <div className="w-10">
@@ -62,37 +133,7 @@ const ListingReview = ({ listingId, currentUser }) => {
       </div>
 
       {/* 페이지 버튼 */}
-      <div className="items-center justify-center mx-auto">
-        <nav aria-label="Page navigation example">
-          <ul className="inline-flex -space-x-px">
-            <li>
-              <a
-                href="#"
-                className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                Previous
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                1
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="#"
-                className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
-                Next
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      {content}
     </>
   );
 };
