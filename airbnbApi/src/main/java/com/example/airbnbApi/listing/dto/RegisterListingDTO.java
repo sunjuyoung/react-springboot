@@ -45,4 +45,6 @@ public class RegisterListingDTO {
 
     private LocalDate startDate;
     private LocalDate endDate;
+
+
 }

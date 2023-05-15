@@ -21,7 +21,11 @@ import com.querydsl.jpa.JPQLQueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.expression.common.ExpressionUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -82,6 +86,20 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
                 categoryEq(category)
         ).fetch();
         return result;
+    }
+
+    @Override
+    public Page<Listing> listingListPage(ListingSearchCondition condition, Category category, Pageable pageable) {
+        QueryResults<Listing> listingQueryResults = listingListFetchJoin().where(
+                locationEq(condition.getLocationValue()),
+                dateEq(condition.getStartDate(), condition.getEndDate()),
+                categoryEq(category)
+        ).offset(pageable.getOffset()).limit(pageable.getPageSize()).fetchResults();
+        List<Listing> results = listingQueryResults.getResults();
+        long total = listingQueryResults.getTotal();
+
+        //return PageableExecutionUtils.getPage(results,pageable,total)
+        return new PageImpl<>(results,pageable,total);
     }
 
     @Override

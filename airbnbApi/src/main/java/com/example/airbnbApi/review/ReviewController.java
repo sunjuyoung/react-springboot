@@ -3,6 +3,7 @@ package com.example.airbnbApi.review;
 import com.example.airbnbApi.review.dto.RegisterReviewDTO;
 import com.example.airbnbApi.review.dto.ResponseReviewDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class ReviewController {
     @GetMapping("/{listing_id}")
     public ResponseEntity<?> getReviews(@PathVariable("listing_id")Integer listing_id,
                                         @RequestParam("page")int page){
-        ReviewService.ResponsePageReview reviewsByListingId = reviewService.getReviewsByListingId(listing_id, page);
+        Page<ResponseReviewDTO> reviewsByListingId = reviewService.getReviewsByListingId(listing_id, page);
         return ResponseEntity.ok().body(reviewsByListingId);
     }
 

@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review,Integer> {
 
     @EntityGraph(attributePaths = {"reviewer","listing"})
-    @Query("select r from Review r where r.listing.id = :listing_id")
+    @Query("select r from Review r where r.listing.id = :listing_id")    //countQuery
     Page<Review> findAllByListingId(@Param("listing_id")Integer listing_id, Pageable pageable);
 }

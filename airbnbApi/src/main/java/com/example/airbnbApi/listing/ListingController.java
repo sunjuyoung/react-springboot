@@ -8,6 +8,7 @@ import com.example.airbnbApi.listing.mapper.ListingMapper;
 import com.example.airbnbApi.listing.vo.ListingVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -37,13 +38,15 @@ public class ListingController {
     public ResponseEntity<?> getAllListings(@RequestParam(value = "locationValue",required = false)String locationValue
                                             ,@RequestParam(value = "category",required = false)String category
                                             ,@RequestParam(value = "keyword",required = false)String keyword
+                                            ,@RequestParam(value = "page",required = false)int page
          ,@RequestParam(value = "startDate",required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate startDate
             ,@RequestParam(value = "endDate",required = false)   @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate endDate ){
         ListingSearchCondition condition = new ListingSearchCondition(locationValue,category,keyword, startDate,endDate);
         //List<ResponseListingListDTO> result = listingService.getAllListings(condition);
         //List<ListingVO> allListings = mapper.getAllListings(condition);
-        List<ResponseListingListDTO> test = listingService.getListingsWithSearch(condition);
-        return ResponseEntity.ok().body(test);
+      //  List<ResponseListingListDTO> test = listingService.getListingsWithSearch(condition);
+        Page<ResponseListingListDTO> result = listingService.getListingsWithSearchPage(condition,page);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/{listing_id}")

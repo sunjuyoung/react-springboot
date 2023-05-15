@@ -36,20 +36,21 @@ public class ReviewService {
 
     }
 
-    public ResponsePageReview getReviewsByListingId(Integer listing_id,int page) {
+    public  Page<ResponseReviewDTO>  getReviewsByListingId(Integer listing_id,int page) {
+
         PageRequest pageRequest = PageRequest.of(page-1, 4, Sort.by(Sort.Direction.DESC, "id"));
+        //sorting 복잡해지면 쿼리로...
         Page<Review> reviews = reviewRepository.findAllByListingId(listing_id,pageRequest);
         if(reviews != null){
-            List<ResponseReviewDTO> collect =
-                    reviews.stream().map(review -> new ResponseReviewDTO(review)).collect(Collectors.toList());
-            ResponsePageReview<ResponseReviewDTO> result = new ResponsePageReview<>(collect, reviews.getTotalPages());
+            Page<ResponseReviewDTO> result = reviews.map(review -> new ResponseReviewDTO(review));
+//            List<ResponseReviewDTO> collect =
+//                    reviews.stream().map(review -> new ResponseReviewDTO(review)).collect(Collectors.toList());
+//            ResponsePageReview<ResponseReviewDTO> result = new ResponsePageReview<>(collect, reviews.getTotalPages());
             return result;
         }
         return null;
     }
 
-    public  record ResponsePageReview<T>(List<T>data,int totalPage){
-
-
-    }
+//    public  record ResponsePageReview<T>(List<T>data,int totalPage){
+//    }
 }

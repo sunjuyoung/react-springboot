@@ -19,7 +19,7 @@ class ListingRepositoryExtensionImplTest {
     @Test
     @DisplayName("")
     public void test1(){
-        listingRepository.allListings();
+
     }
 
 }

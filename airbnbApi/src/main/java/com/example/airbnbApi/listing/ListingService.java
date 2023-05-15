@@ -13,6 +13,8 @@ import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,18 +51,6 @@ public class ListingService {
         }
     }
 
-    public List<ResponseListingListDTO> getAllListings(ListingSearchCondition condition){
-
-//
-//        Category category = null;
-//        if(StringUtils.hasText(condition.getCategory())){
-//            category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
-//        }
-//        return  listingRepository.listingListBySearch(condition, category);
-
-
-        return null;
-    }
 
     public ResponseGetListingDTO getListingById(Integer listing_id) {
         Listing listing = listingRepository.findById(listing_id)
@@ -88,6 +78,23 @@ public class ListingService {
         List<ResponseListingListDTO> result = listings.stream()
                 .map(listing -> new ResponseListingListDTO(listing))
                 .collect(Collectors.toList());
+        return result;
+    }
+
+    public Page<ResponseListingListDTO> getListingsWithSearchPage(ListingSearchCondition condition, int page) {
+        Category category = null;
+        if(StringUtils.hasText(condition.getCategory())){
+            category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
+        }
+
+
+        Page<Listing> listings = listingRepository.listingListPage(condition, category, PageRequest.of(page, 10));
+
+        Page<ResponseListingListDTO> result = listings.map(listing -> new ResponseListingListDTO(listing));
+//
+//        List<ResponseListingListDTO> result = listings.stream()
+//                .map(listing -> new ResponseListingListDTO(listing))
+//                .collect(Collectors.toList());
         return result;
     }
 }
