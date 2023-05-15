@@ -23,9 +23,10 @@ public class ReviewController {
     }
 
     @GetMapping("/{listing_id}")
-    public ResponseEntity<?> getReviews(@PathVariable("listing_id")Integer listing_id){
-        List<ResponseReviewDTO> result = reviewService.getReviewsByListingId(listing_id);
-        return ResponseEntity.ok().body(result);
+    public ResponseEntity<?> getReviews(@PathVariable("listing_id")Integer listing_id,
+                                        @RequestParam("page")int page){
+        ReviewService.ResponsePageReview reviewsByListingId = reviewService.getReviewsByListingId(listing_id, page);
+        return ResponseEntity.ok().body(reviewsByListingId);
     }
 
     @PutMapping("/{review_id}")
