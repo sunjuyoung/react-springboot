@@ -33,7 +33,7 @@ const ListingReview = ({ listingId, currentUser }) => {
     return <span>Loading..</span>;
   }
 
-  if (!reviews || reviews.data.length === 0) {
+  if (!reviews || reviews.content.length === 0) {
     return (
       <>
         <EmptyReview disabledButton={true} />
@@ -51,7 +51,7 @@ const ListingReview = ({ listingId, currentUser }) => {
     e.preventDefault();
     setPage((prev) => prev - 1);
   };
-  const pageArray = Array(reviews.totalPage)
+  const pageArray = Array(reviews.totalPages)
     .fill()
     .map((_, index) => index + 1);
 
@@ -98,7 +98,7 @@ const ListingReview = ({ listingId, currentUser }) => {
               className={`px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg
              hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 
              dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white 
-             ${isPreviousData || page === reviews.totalPage ? "hidden" : ""}`}
+             ${isPreviousData || page === reviews.totalPages ? "hidden" : ""}`}
             >
               Next
             </a>
@@ -111,11 +111,11 @@ const ListingReview = ({ listingId, currentUser }) => {
     <>
       <div className="pb-5 mb-2">
         <div className="py-10 text-lg font-bold">
-          <span>별점 후기 {reviews.data.length}개</span>
+          <span>별점 후기 {reviews.content.length}개</span>
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          {reviews.data.map((review) => (
+          {reviews.content.map((review) => (
             <div key={review.id} className="flex flex-col h-auto gap-2">
               <div className="grid gap-2 grid-cols-[50px,2fr_1fr] items-center">
                 <div className="w-10">

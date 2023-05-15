@@ -5,8 +5,8 @@ const newRequest = axios.create({
   // withCredentials: true,
 });
 
-export const getAllListing = async (token, url) => {
-  const response = await newRequest.get(`/listing${url}`, {
+export const getAllListing = async (token, url, pageParam) => {
+  const response = await newRequest.get(`/listing${url}?page=${pageParam}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
