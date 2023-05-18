@@ -39,3 +39,5 @@ out/
 **/application-dev.yml
 
 application-dev.yml
+
+application-oauth.yml

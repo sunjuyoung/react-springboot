@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String jwt = authHeader.substring(7);
 
-        try {
+
             String userEmail = jwtService.extractUsername(jwt);
             if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
@@ -61,22 +61,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        }catch (ExpiredJwtException e){
-            response.setStatus(AccessTokenException.TOKEN_ERROR.EXPIRED.getStatus());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            Gson gson = new Gson();
-
-            String responseStr = gson.toJson(Map.of("msg", AccessTokenException.TOKEN_ERROR.EXPIRED.getMsg(), "time", new Date()));
-
-            try {
-                response.getWriter().println(responseStr);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            filterChain.doFilter(request,response);
-            return;
-        }
 
 
 

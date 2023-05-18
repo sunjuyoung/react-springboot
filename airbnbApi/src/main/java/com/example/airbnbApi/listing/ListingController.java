@@ -38,14 +38,26 @@ public class ListingController {
     public ResponseEntity<?> getAllListings(@RequestParam(value = "locationValue",required = false)String locationValue
                                             ,@RequestParam(value = "category",required = false)String category
                                             ,@RequestParam(value = "keyword",required = false)String keyword
-                                            ,@RequestParam(value = "page",required = false)int page
+                                            ,@RequestParam(value = "page",required = false)Integer page
          ,@RequestParam(value = "startDate",required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate startDate
             ,@RequestParam(value = "endDate",required = false)   @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate endDate ){
         ListingSearchCondition condition = new ListingSearchCondition(locationValue,category,keyword, startDate,endDate);
         //List<ResponseListingListDTO> result = listingService.getAllListings(condition);
         //List<ListingVO> allListings = mapper.getAllListings(condition);
       //  List<ResponseListingListDTO> test = listingService.getListingsWithSearch(condition);
-        Page<ResponseListingListDTO> result = listingService.getListingsWithSearchPage(condition,page);
+        log.info("===================");
+        log.info(category);
+        log.info(page);
+
+        int pg;
+        if(page == null){
+            pg  = 1;
+        }else{
+            pg = page.intValue();
+        }
+
+        Page<ResponseListingListDTO> result =
+                listingService.getListingsWithSearchPage(condition, pg);
         return ResponseEntity.ok().body(result);
     }
 

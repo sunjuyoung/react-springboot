@@ -4,6 +4,7 @@ import com.example.airbnbApi.common.BaseTime;
 import com.example.airbnbApi.listing.Listing;
 import com.example.airbnbApi.reservation.dto.ReservationDTO;
 import com.example.airbnbApi.user.Account;
+import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +50,7 @@ public class Reservation extends BaseTime {
     private Listing listing;
 
     protected Reservation(){}
+
 
     public Reservation(ReservationDTO reservationDTO, Account guest, Listing listing) {
         this.startDate = reservationDTO.getStartDate();

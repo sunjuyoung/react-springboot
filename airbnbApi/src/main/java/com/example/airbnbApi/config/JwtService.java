@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class JwtService {
         return generateToken(new HashMap<>(),userDetails);
     }
 
+
     public <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -54,6 +56,7 @@ public class JwtService {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public boolean isTokenValid(String token,UserDetails userDetails)  {
         String username = extractUsername(token);

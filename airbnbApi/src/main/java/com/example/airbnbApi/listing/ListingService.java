@@ -9,8 +9,11 @@ import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseGetListingDTO;
 import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
 import com.example.airbnbApi.listing.vo.ListingVO;
+import com.example.airbnbApi.reservation.Reservation;
+import com.example.airbnbApi.reservation.ReservationRepository;
 import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.user.UserRepository;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -36,6 +39,9 @@ public class ListingService {
     private final CategoryRepository categoryRepository;
     private final PhotoRepository photoRepository;
 
+    private final ReservationRepository reservationRepository;
+
+
     public void createListing(RegisterListingDTO registerListingDTO){
         Account account = userRepository.findByEmail(registerListingDTO.getEmail()).get();
 
@@ -55,8 +61,9 @@ public class ListingService {
     public ResponseGetListingDTO getListingById(Integer listing_id) {
         Listing listing = listingRepository.findById(listing_id)
                 .orElseThrow();
-
+        List<Reservation> reservations = reservationRepository.findByListing(listing);
         ResponseGetListingDTO getListingDTO = new ResponseGetListingDTO(listing);
+        getListingDTO.setReservations(reservations);
         return getListingDTO;
 
     }
@@ -88,9 +95,14 @@ public class ListingService {
         }
 
 
-        Page<Listing> listings = listingRepository.listingListPage(condition, category, PageRequest.of(page, 10));
+
+        Page<Listing> listings = listingRepository.listingListPage(condition, category, PageRequest.of(page-1, 10));
+
 
         Page<ResponseListingListDTO> result = listings.map(listing -> new ResponseListingListDTO(listing));
+
+
+//        Page<ResponseListingListDTO> result = listings.map(listing -> new ResponseListingListDTO(listing));
 //
 //        List<ResponseListingListDTO> result = listings.stream()
 //                .map(listing -> new ResponseListingListDTO(listing))

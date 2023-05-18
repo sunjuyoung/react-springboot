@@ -2,9 +2,7 @@ package com.example.airbnbApi.listing;
 
 import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.category.QCategory;
-import com.example.airbnbApi.listing.dto.ListingSearchCondition;
-import com.example.airbnbApi.listing.dto.QResponseListingListDTO;
-import com.example.airbnbApi.listing.dto.ResponseListingListDTO;
+import com.example.airbnbApi.listing.dto.*;
 import com.example.airbnbApi.reservation.QReservation;
 import com.example.airbnbApi.review.QReview;
 import com.example.airbnbApi.user.QAccount;
@@ -38,8 +36,7 @@ import static com.example.airbnbApi.listing.QListing.*;
 import static com.example.airbnbApi.reservation.QReservation.*;
 import static com.example.airbnbApi.review.QReview.*;
 import static com.example.airbnbApi.user.QAccount.*;
-import static com.querydsl.jpa.JPAExpressions.select;
-import static com.querydsl.jpa.JPAExpressions.selectDistinct;
+import static com.querydsl.jpa.JPAExpressions.*;
 import static org.springframework.util.StringUtils.*;
 
 public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport implements ListingRepositoryExtension {
@@ -110,6 +107,19 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
         return null;
     }
 
+    @Override
+    public List<Tuple> getListingById(Integer listing_id) {
+        List<Listing> fetch = selectFrom(listing).distinct()
+                .innerJoin(account).on(listing.host.eq(account))
+                .leftJoin(reservation).on(reservation.listing.eq(listing))
+                .leftJoin(category).fetchJoin()
+                .leftJoin(listing.reviews, review).fetchJoin()
+                .where(account.id.eq(listing_id)).fetch();
+
+
+        return null;
+    }
+
     private BooleanExpression locationEq(String locationValue){
         return hasText(locationValue) ? listing.map.location.eq(locationValue) : null;
     }
@@ -147,7 +157,6 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
     }
 
     private JPQLQuery<Listing> listingListFetchJoin(){
-
        return from(listing).distinct()
                 .innerJoin(account).on(listing.host.eq(account))
                 .leftJoin(reservation).on(reservation.listing.eq(listing))
@@ -155,10 +164,8 @@ public class ListingRepositoryExtensionImpl extends QuerydslRepositorySupport im
                 .leftJoin(listing.reviews, review).fetchJoin()
                 .select(listing);
 
-
-
-
     }
+
 
 
 

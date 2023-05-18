@@ -3,7 +3,10 @@ package com.example.airbnbApi.listing.dto;
 import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.common.Photo;
 import com.example.airbnbApi.listing.Listing;
+import com.example.airbnbApi.listing.vo.ReservationDateVO;
 import com.example.airbnbApi.listing.vo.ReviewVO;
+import com.example.airbnbApi.reservation.Reservation;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -50,6 +53,19 @@ public class ResponseGetListingDTO {
 
     private List<ReviewVO> reviews;
 
+    private List<ReservationDateVO> reservationDates;
+
+
+    @QueryProjection
+    public ResponseGetListingDTO(Set<String> imageSrc, LocalDate startDate,
+                                 LocalDate endDate, List<ReviewVO> reviews,
+                                 List<ReservationDateVO> reservationDates) {
+        this.imageSrc = imageSrc;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.reviews = reviews;
+        this.reservationDates = reservationDates;
+    }
 
     public ResponseGetListingDTO(Listing listing) {
         this.id = listing.getId();
@@ -68,12 +84,20 @@ public class ResponseGetListingDTO {
         for(String image:  listing.getImages()){
             this.imageSrc.add(image);
         }
-        this.reviews = listing.getReviews().stream()
-                .map(review -> new ReviewVO(review))
-                .collect(Collectors.toList());
+//        this.reviews = listing.getReviews().stream()
+//                .map(review -> new ReviewVO(review))
+//                .collect(Collectors.toList());
 
         this.startDate = listing.getStartDate();
         this.endDate = listing.getEndDate();
 
+
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+       this.reservationDates =  reservations.stream()
+                .map(reservation
+                        -> new ReservationDateVO(reservation.getStartDate(),reservation.getEndDate()))
+                .collect(Collectors.toList());
     }
 }

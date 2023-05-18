@@ -4,7 +4,6 @@ package com.example.airbnbApi;
 import com.example.airbnbApi.auth.AuthRequest;
 import com.example.airbnbApi.auth.AuthService;
 import com.example.airbnbApi.auth.RegisterRequest;
-import com.example.airbnbApi.auth.provider.OAuthUser;
 import com.example.airbnbApi.category.CategoryService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.ApplicationRunner;

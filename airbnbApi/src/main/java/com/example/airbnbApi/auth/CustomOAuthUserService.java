@@ -1,12 +1,14 @@
 package com.example.airbnbApi.auth;
 
 
-import com.example.airbnbApi.auth.provider.OAuth2UserInfo;
 import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.user.Role;
 import com.example.airbnbApi.user.UserRepository;
+import com.sun.tools.jconsole.JConsoleContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,36 +29,36 @@ import java.util.UUID;
 public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
-
-        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
-
-        log.info(oAuth2User);
-
-        log.info(userRequest.getClientRegistration().getRegistrationId());
-        log.info("name??  ===== {}" ,userRequest.getClientRegistration().getClientName());
-        log.info("name??  ===== {}" ,userRequest.getClientRegistration().getClientId());
-        log.info("name??  ===== {}" ,userRequest.getClientRegistration().getRegistrationId());
-
-        String clientName = userRequest.getClientRegistration().getClientName();
+        OAuth2UserService<OAuth2UserRequest,OAuth2User> delegate = new DefaultOAuth2UserService();
+        OAuth2User oauth2User = delegate.loadUser(userRequest);
 
 
-        switch (clientName){
-            case "GitHub": log.info("github login");
-                break;
-            case "Google": log.info("google login");
-                break;
-        }
+        Map<String,Object> attributes = oauth2User.getAttributes();
+        String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+        String picture = (String) attributes.get("picture");
 
 
 
-        return oAuth2User;
+        Account user = userRepository.findByEmail(email)
+                //.map(entity -> entity.update(name))
+                .orElse(Account.builder()
+                        .name(name)
+                        .email(email)
+                        .image(picture)
+                        .password(passwordEncoder.encode("1234"))
+                        .role(Role.MEMBER)
+                        .build());
+        userRepository.save(user);
+
+
+        return oauth2User;
     }
 }
