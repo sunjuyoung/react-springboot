@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import qs from "query-string";
 import ListingCard from "../components/listing/listingCard";
 import {
@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import newRequest, { getAllListing } from "../utils/newRequest";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Categories from "../components/navbar/Categories";
 import EmptyState from "../components/EmptyState";
 import { useInView } from "react-intersection-observer";
@@ -17,6 +17,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const home = () => {
   const user = useSelector((state) => state?.user);
   const token = useSelector((state) => state?.token);
+  const navigatge = useNavigate();
 
   const { ref, inView } = useInView();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,6 +26,7 @@ const home = () => {
   let startDate = searchParams.get("startDate");
   const queryClient = useQueryClient();
   const currentParams = Object.fromEntries([...searchParams]);
+  const [url, setUrl] = useState("");
 
   const {
     status,
@@ -38,44 +40,50 @@ const home = () => {
     hasNextPage,
     hasPreviousPage,
   } = useInfiniteQuery(
-    ["listings"],
-    async ({ pageParam = 0 }) => await getAllListing(token, "", pageParam),
+    ["listings", token, url],
+    async ({ pageParam = 1 }) => await getAllListing(token, url, pageParam),
 
     {
-      getPreviousPageParam: (firstPage) =>
-        !firstPage.first && lastPage.number > 1
-          ? lastPage.number - 1
-          : null ?? undefined,
+      getPreviousPageParam: (firstPage) => {
+        !firstPage.first && firstPage.number > 1
+          ? firstPage.number - 1
+          : null ?? undefined;
+      },
       getNextPageParam: (lastPage) =>
         !lastPage.last && lastPage.number < lastPage.totalPages
           ? lastPage.number + 1
           : null ?? undefined,
-      //enabled: !locationValue && !category && !startDate,
     }
   );
 
+  // useEffect(() => {
+  //   if (inView) {
+  //     fetchNextPage();
+  //   }
+  // }, [inView]);
+
   useEffect(() => {
-    if (inView) {
-      fetchNextPage();
+    if (locationValue || category || startDate) {
+      const u = qs.stringifyUrl(
+        {
+          url: "",
+          query: currentParams,
+        },
+        { skipNull: true }
+      );
+
+      setUrl(u.replace("?", "&"));
+    } else {
+      setUrl("");
     }
-  }, [inView]);
+  }, [searchParams, locationValue, category]);
 
   // useEffect(() => {
-  //   if (locationValue || category || startDate) {
-  //     const url = qs.stringifyUrl(
-  //       {
-  //         url: "",
-  //         query: currentParams,
-  //       },
-  //       { skipNull: true }
-  //     );
-
-  //     queryClient.prefetchQuery({
-  //       queryKey: ["listings"],
-  //       queryFn: () => getAllListing(token, url),
-  //     });
-  //   }
-  // }, [searchParams, locationValue, category, currentParams]);
+  //   queryClient.prefetchQuery({
+  //     queryKey: ["listings"],
+  //     queryFn: () => getAllListing(token, url, page),
+  //   });
+  // }, [url]);
 
   if (status === "error") {
     return <span>Error: {error.message}</span>;
@@ -100,21 +108,9 @@ xl:px-20 md:px-10 px-4 sm:px-2"
           <p>Loading</p>
         ) : (
           <>
-            <div>
-              <button
-                onClick={() => fetchPreviousPage()}
-                disabled={!hasPreviousPage || isFetchingPreviousPage}
-              >
-                {isFetchingPreviousPage
-                  ? "Loading more..."
-                  : hasPreviousPage
-                  ? "Load Older"
-                  : "Nothing more to load"}
-              </button>
-            </div>
             <div className="grid grid-cols-1 gap-8 pt-24 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
-              {listings.pages.map((listing) => {
-                return listing.content.map((list) => {
+              {listings?.pages?.map((listing) => {
+                return listing?.content?.map((list) => {
                   return (
                     <ListingCard
                       key={list.listing_id}
@@ -130,7 +126,7 @@ xl:px-20 md:px-10 px-4 sm:px-2"
             <div>
               <button
                 ref={ref}
-                onClick={() => fetchNextPage()}
+                // onClick={() => fetchNextPage()}
                 disabled={!hasNextPage || isFetchingNextPage}
               >
                 {isFetchingNextPage
@@ -141,9 +137,7 @@ xl:px-20 md:px-10 px-4 sm:px-2"
               </button>
             </div>
             <div>
-              {isFetching && !isFetchingNextPage
-                ? "Background Updating..."
-                : null}
+              {isFetching && !isFetchingNextPage ? "Fetching..." : null}
             </div>
           </>
         )}

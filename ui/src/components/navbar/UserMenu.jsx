@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import MenuItem from "./MenuItem";
 
 import { AiOutlineMenu } from "react-icons/ai";
@@ -8,6 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../../state";
 import { toast } from "react-hot-toast";
+import { IoFastFood } from "react-icons/io5";
 
 const UserMenu = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +21,11 @@ const UserMenu = ({ user }) => {
     setIsOpen((value) => !value);
   }, []);
 
+  const userMenuToggle = useCallback((path) => {
+    setIsOpen(() => false);
+    navigate(path);
+  }, []);
+
   const logoutHandle = () => {
     dispatch(setLogout());
     toast.error("Logout");
@@ -29,6 +35,7 @@ const UserMenu = ({ user }) => {
     if (!user) {
       navigate("/login");
     }
+    setIsOpen(() => false);
     navigate("/listingForm");
   }, []);
 
@@ -61,6 +68,11 @@ const UserMenu = ({ user }) => {
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
+            <div className="absolute top-0 right-0 items-center justify-center w-5 h-5 text-white rounded-full bg-rose-500">
+              <span className="absolute top-0.5 items-center justify-center text-xs right-2">
+                0
+              </span>
+            </div>
             <Avatar />
           </div>
         </div>
@@ -87,26 +99,27 @@ const UserMenu = ({ user }) => {
                 <MenuItem
                   label="알림"
                   onClick={() => {
-                    navigate("/trips");
+                    userMenuToggle("/trips");
+                    //navigate("/trips");
                   }}
                 />
                 <MenuItem
                   label="여행"
                   onClick={() => {
-                    navigate("/trips");
+                    userMenuToggle("/trips");
                   }}
                 />
                 <MenuItem
                   label="위시리스트"
                   onClick={() => {
-                    navigate("/favorites");
+                    userMenuToggle("/favorites");
                   }}
                 />
                 <MenuItem label="My reservations" onClick={() => {}} />
                 <MenuItem
                   label="계정"
                   onClick={() => {
-                    navigate("/properties");
+                    userMenuToggle("/properties");
                   }}
                 />
 

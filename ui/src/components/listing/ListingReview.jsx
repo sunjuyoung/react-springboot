@@ -43,6 +43,7 @@ const ListingReview = ({ listingId, currentUser }) => {
   if (isFetching) {
     return <span>Loading..</span>;
   }
+
   const nextPage = (e) => {
     e.preventDefault();
     setPage((prev) => prev + 1);
@@ -55,6 +56,8 @@ const ListingReview = ({ listingId, currentUser }) => {
     .fill()
     .map((_, index) => index + 1);
 
+  console.log(reviews);
+
   const content = (
     <div className="items-center justify-center mx-auto">
       <nav aria-label="Page navigation example">
@@ -66,7 +69,7 @@ const ListingReview = ({ listingId, currentUser }) => {
               className={`px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 
             rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700
              dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white 
-             ${isPreviousData || page === 1 ? "hidden" : ""}`}
+             ${isPreviousData || page === 1 ? "pointer-events-none" : ""}`}
             >
               Previous
             </a>
@@ -80,10 +83,10 @@ const ListingReview = ({ listingId, currentUser }) => {
                   setPage(pg);
                 }}
                 href="#"
-                className={`px-3 py-2 leading-tight  bg-white border border-gray-300
+                className={`px-3 py-2 leading-tight  border border-gray-300
                hover:bg-gray-100 hover:text-gray-700  dark:border-gray-700
                 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white
-                ${page === pg ? "bg-gray-800 text-white" : "text-gray-500"}
+                ${page === pg ? "bg-gray-800 text-white " : "text-gray-500"}
                 `}
               >
                 {pg}
@@ -98,7 +101,11 @@ const ListingReview = ({ listingId, currentUser }) => {
               className={`px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg
              hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 
              dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white 
-             ${isPreviousData || page === reviews.totalPages ? "hidden" : ""}`}
+             ${
+               isPreviousData || page === reviews.totalPages
+                 ? "pointer-events-none"
+                 : ""
+             }`}
             >
               Next
             </a>

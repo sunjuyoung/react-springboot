@@ -89,7 +89,7 @@ const ListingPage = () => {
   const disabledDates = () => {
     let dates = [];
 
-    reservations.forEach((reservation) => {
+    listing.reservationDates?.forEach((reservation) => {
       const range = eachDayOfInterval({
         start: new Date(reservation.startDate),
         end: new Date(reservation.endDate),
@@ -101,6 +101,7 @@ const ListingPage = () => {
     return dates;
   };
 
+  console.log(listing);
   return (
     <div
       className="max-w-[2520px] mx-auto
@@ -183,6 +184,18 @@ xl:px-20 md:px-10 px-4 sm:px-2"
           <ListingReview listingId={listing_id} currentUser={user} />
 
           <hr />
+
+          {/* bottom */}
+          <div>
+            <p className="text-2xl font-bold">알아두어야할 사항</p>
+            <div className="flex flex-row row-span-3 justify-evenly">
+              <div>
+                <p>숙소 이용규칙</p>
+              </div>
+              <div>안전 및 숙소</div>
+              <div>환불 정책</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
