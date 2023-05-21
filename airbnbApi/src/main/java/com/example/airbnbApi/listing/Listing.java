@@ -3,7 +3,7 @@ package com.example.airbnbApi.listing;
 import com.example.airbnbApi.category.Category;
 import com.example.airbnbApi.common.BaseTime;
 import com.example.airbnbApi.common.Map;
-import com.example.airbnbApi.common.Photo;
+
 import com.example.airbnbApi.listing.dto.RegisterListingDTO;
 import com.example.airbnbApi.review.Review;
 import com.example.airbnbApi.user.Account;
@@ -79,10 +79,7 @@ public class Listing extends BaseTime {
     )
     @Column(name = "images")
     private Set<String> images = new HashSet<>();
-//
-//    @Builder.Default
-//    @OneToMany(mappedBy = "listing", cascade = {CascadeType.ALL})
-//    private Set<Photo> images = new HashSet<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)

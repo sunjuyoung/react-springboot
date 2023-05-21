@@ -42,22 +42,9 @@ public class ListingController {
          ,@RequestParam(value = "startDate",required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate startDate
             ,@RequestParam(value = "endDate",required = false)   @DateTimeFormat(pattern = "yyyy-MM-dd")  LocalDate endDate ){
         ListingSearchCondition condition = new ListingSearchCondition(locationValue,category,keyword, startDate,endDate);
-        //List<ResponseListingListDTO> result = listingService.getAllListings(condition);
-        //List<ListingVO> allListings = mapper.getAllListings(condition);
-      //  List<ResponseListingListDTO> test = listingService.getListingsWithSearch(condition);
-        log.info("===================");
-        log.info(category);
-        log.info(page);
-
-        int pg;
-        if(page == null){
-            pg  = 1;
-        }else{
-            pg = page.intValue();
-        }
 
         Page<ResponseListingListDTO> result =
-                listingService.getListingsWithSearchPage(condition, pg);
+                listingService.getListingsWithSearchPage(condition, page);
         return ResponseEntity.ok().body(result);
     }
 

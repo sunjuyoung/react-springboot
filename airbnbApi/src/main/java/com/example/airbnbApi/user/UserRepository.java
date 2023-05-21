@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<Account,Integer>,UserRepos
 
     @Query("select a from Account a where a.id = :account_id")
     Account findOnlyId(@Param("account_id") int account_id);
+
+
+
 }

@@ -28,7 +28,7 @@ public class Notification {
 
     private boolean checked;
 
-    private String reservationUser;
+    private String sendUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Account account;

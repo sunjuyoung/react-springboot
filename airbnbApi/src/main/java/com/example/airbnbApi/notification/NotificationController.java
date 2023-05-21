@@ -19,9 +19,13 @@ public class NotificationController {
 
     @GetMapping("/{account_id}")
     public ResponseEntity<?> getNotificationByAccountId(@PathVariable("account_id")Integer accountId){
+        List<ResponseNotificationDTO> result = notificationService.getNotificationByAccountId(accountId);
+        return ResponseEntity.ok().body(result);
+    }
 
-        List<ResponseNotificationDTO> dtos = notificationService.getNotificationByAccountId(accountId);
-
-        return ResponseEntity.ok().body("");
+    @GetMapping("/count/{account_id}")
+    public ResponseEntity<?> getNotificationCountByAccountId(@PathVariable("account_id")Integer accountId){
+        long count =  notificationService.getNotificationCountByAccountId(accountId);
+        return ResponseEntity.ok().body(count);
     }
 }

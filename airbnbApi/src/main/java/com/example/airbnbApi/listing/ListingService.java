@@ -88,25 +88,22 @@ public class ListingService {
         return result;
     }
 
-    public Page<ResponseListingListDTO> getListingsWithSearchPage(ListingSearchCondition condition, int page) {
+    public Page<ResponseListingListDTO> getListingsWithSearchPage(ListingSearchCondition condition, Integer page) {
         Category category = null;
+        int pg;
+        if(page == null){
+            pg  = 1;
+        }else{
+            pg = page.intValue();
+        }
         if(StringUtils.hasText(condition.getCategory())){
             category =  categoryRepository.findOnlyCategoryByName(condition.getCategory());
         }
 
-
-
-        Page<Listing> listings = listingRepository.listingListPage(condition, category, PageRequest.of(page-1, 10));
-
-
-        Page<ResponseListingListDTO> result = listings.map(listing -> new ResponseListingListDTO(listing));
-
-
-//        Page<ResponseListingListDTO> result = listings.map(listing -> new ResponseListingListDTO(listing));
-//
-//        List<ResponseListingListDTO> result = listings.stream()
-//                .map(listing -> new ResponseListingListDTO(listing))
-//                .collect(Collectors.toList());
+        Page<Listing> listings =
+                listingRepository.listingListPage(condition, category, PageRequest.of(pg-1, 10));
+        Page<ResponseListingListDTO> result = listings
+                .map(listing -> new ResponseListingListDTO(listing));
         return result;
     }
 }

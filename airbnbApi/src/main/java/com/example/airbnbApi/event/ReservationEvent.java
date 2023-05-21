@@ -9,9 +9,11 @@ public class ReservationEvent {
 
 
     private Listing listing;
+    private String sendUser;
 
 
-    public ReservationEvent(Listing listing) {
+    public ReservationEvent(Listing listing,String sendUser) {
         this.listing = listing;
+        this.sendUser = sendUser;
     }
 }

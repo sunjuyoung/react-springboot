@@ -12,27 +12,33 @@ public class FavoriteListDTO {
 
     private Integer listing_id;
 
+    private String title;
+
     private Integer user_id;
 
     private String location;
 
     private int price;
 
-    private String categories;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     private String image_src;
 
-    private Integer  favorites;
 
     @QueryProjection
-    public FavoriteListDTO(Integer listing_id, Integer user_id, String location,
-                           int price, String categories, String image_src,Integer favorites) {
+    public FavoriteListDTO(Integer listing_id, Integer user_id, String location, String title,
+                           int price, String image_src, LocalDate startDate, LocalDate endDate) {
         this.listing_id = listing_id;
         this.user_id = user_id;
         this.location = location;
+        this.title = title;
         this.price = price;
-        this.categories = categories;
         this.image_src = image_src;
-        this.favorites = favorites;
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+
     }
 }

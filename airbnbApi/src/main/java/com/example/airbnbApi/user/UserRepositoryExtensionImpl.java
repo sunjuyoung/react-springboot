@@ -22,22 +22,22 @@ public class UserRepositoryExtensionImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public  List<FavoriteListDTO> getFavoriteListingList(Integer listing_id) {
+    public  List<FavoriteListDTO> getFavoriteListingList(Integer account_id) {
 
         List<FavoriteListDTO> fetch = from(account)
-                .leftJoin(listing).on(listing.host.eq(account))
-                .where(account.id.eq(listing_id))
+                .join(account.favorites)
+                .innerJoin(listing).on(listing.host.eq(account))
+
                 .select(new QFavoriteListDTO(
                         listing.id,
                         account.id,
                         listing.map.location,
+                        listing.title,
                         listing.price,
-                        listing.categories.any().name,
                         listing.imageSrc,
-                        account.favorites.any()
-
-                )).fetch();
-
+                        listing.startDate,
+                        listing.endDate
+                ))   .where(account.id.eq(account_id)).fetch();
 
         return fetch;
     }

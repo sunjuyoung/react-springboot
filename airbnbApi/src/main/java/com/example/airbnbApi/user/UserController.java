@@ -3,6 +3,7 @@ package com.example.airbnbApi.user;
 import com.example.airbnbApi.user.dto.FavoriteDTO;
 import com.example.airbnbApi.user.dto.FavoriteListDTO;
 import com.example.airbnbApi.user.mapper.UserMapper;
+import com.example.airbnbApi.user.vo.FavoriteListVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class UserController {
 
     @GetMapping("/favorite/listingList/{account_id}")
     public ResponseEntity<?> getFavoriteListingList(@PathVariable Integer account_id){
-        List<FavoriteListDTO> result = userService.getFavoriteListingList(account_id);
+        List<FavoriteListVO> result = userService.getFavoriteListingList(account_id);
         return ResponseEntity.ok().body(result);
     }
 

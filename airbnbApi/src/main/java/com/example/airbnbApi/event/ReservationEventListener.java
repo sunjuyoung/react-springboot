@@ -36,18 +36,15 @@ public class ReservationEventListener {
 
     @EventListener
     public void handleStudyCreatedEvent(ReservationEvent reservationEvent){
-
         Listing listing = reservationEvent.getListing();
-
         Listing listingWithHost = listingRepository.findListingWithHostById(listing.getId());
-
         Notification notification = Notification.builder()
                 .title(listingWithHost.getTitle())
                 .link("/api/v1/listing/"+ listingWithHost.getId())
                 .checked(false)
                 .createdLocalDateTime(LocalDateTime.now())
                 .message("예약")
-
+                .sendUser(reservationEvent.getSendUser())
                 .account(listingWithHost.getHost())
                 .notificationType(NotificationType.LISTING_RESERVATION)
                 .build();

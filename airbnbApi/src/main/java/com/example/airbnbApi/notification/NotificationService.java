@@ -17,7 +17,11 @@ public class NotificationService {
 
 
     public List<ResponseNotificationDTO> getNotificationByAccountId(Integer accountId) {
-
         return notificationRepository.findNotificationByAccountId(accountId);
+    }
+
+    public long getNotificationCountByAccountId(Integer accountId) {
+        Account account = userRepository.findOnlyId(accountId);
+        return notificationRepository.countByAccount(account);
     }
 }

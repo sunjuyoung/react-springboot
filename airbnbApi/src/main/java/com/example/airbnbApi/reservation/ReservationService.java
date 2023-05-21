@@ -29,7 +29,7 @@ public class ReservationService {
         Account account = userRepository.findOnlyId(reservationDTO.getUser_id().intValue());
         Reservation reservation = new Reservation(reservationDTO,account,listing);
         reservationRepository.save(reservation);
-        eventPublisher.publishEvent(new ReservationEvent(listing));
+        eventPublisher.publishEvent(new ReservationEvent(listing, account.getName()));
     }
 
     public List<ReservationResponseDTO> getReservationByUser(Integer userId) {

@@ -10,5 +10,5 @@ import java.util.Set;
 public interface UserRepositoryExtension {
 
 
-    List<FavoriteListDTO> getFavoriteListingList(Integer listing_id);
+    List<FavoriteListDTO> getFavoriteListingList(Integer account_id);
 }

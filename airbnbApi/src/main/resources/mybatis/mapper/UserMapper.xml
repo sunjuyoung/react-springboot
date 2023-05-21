@@ -21,5 +21,14 @@
         ORDER BY a.account_id ASC;
     </select>
 
+    <select id="getFavoriteListByUserId" resultType="com.example.airbnbApi.user.vo.FavoriteListVO">
+        SELECT l.listing_id, a.account_id,l.location,l.title,l.price,l.image_src,l.start_date,l.end_date
+        FROM account a
+          INNER JOIN favorites f  on f.favorite_id = a.account_id
+          INNER JOIN listing l  on l.listing_id = f.favorite_listing_id
+        WHERE a.account_id = #{account_id}
+        ;
+    </select>
+
     
 </mapper>
