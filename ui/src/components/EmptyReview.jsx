@@ -21,7 +21,7 @@ const EmptyReview = ({
     >
       <Heading center title={title} subtitle={subtitle} />
       <div className="w-48 mt-4">
-        {disabledButton ? (
+        {!disabledButton ? (
           <Button outline label="후기 남기기" onClick={() => navigate("/")} />
         ) : (
           <></>

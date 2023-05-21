@@ -7,7 +7,7 @@ import EmptyState from "../EmptyState";
 import EmptyReview from "../EmptyReview";
 import { useEffect } from "react";
 
-const ListingReview = ({ listingId, currentUser }) => {
+const ListingReview = ({ listingId, currentUser, disabled }) => {
   const token = useSelector((state) => state?.token);
   const [page, setPage] = useState(1);
 
@@ -36,7 +36,7 @@ const ListingReview = ({ listingId, currentUser }) => {
   if (!reviews || reviews.content.length === 0) {
     return (
       <>
-        <EmptyReview disabledButton={true} />
+        <EmptyReview disabledButton={disabled} />
       </>
     );
   }
@@ -55,8 +55,6 @@ const ListingReview = ({ listingId, currentUser }) => {
   const pageArray = Array(reviews.totalPages)
     .fill()
     .map((_, index) => index + 1);
-
-  console.log(reviews);
 
   const content = (
     <div className="items-center justify-center mx-auto">

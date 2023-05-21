@@ -22,6 +22,7 @@ export const getListingById = async (id, token) => {
 export const useFavorites = async (data, token, hasFavorited) => {
   let res;
   if (hasFavorited) {
+    console.log("addddddddd");
     res = await newRequest.delete(
       `/favorite/${data.listing_id}/${data.userId}`,
       {
@@ -29,6 +30,7 @@ export const useFavorites = async (data, token, hasFavorited) => {
       }
     );
   } else {
+    console.log("delete");
     res = await newRequest.post("/favorite", data, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -67,6 +69,20 @@ export const getListingsListByUserId = async (id, token) => {
 
 export const getReviewsByListingId = async (id, page, token) => {
   const response = await newRequest.get(`/review/${id}?page=${page}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getNotification = async (id, token) => {
+  const response = await newRequest.get(`/notification/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const getNotificationCount = async (id, token) => {
+  const response = await newRequest.get(`/notification/count/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;

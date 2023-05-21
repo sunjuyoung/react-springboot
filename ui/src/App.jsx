@@ -14,6 +14,7 @@ import FavoritesPage from "./pages/favorites/FavoritesPage";
 import PropertiesPage from "./pages/properties/PropertiesPage";
 import SearchLocationModal from "./components/modal/SearchLocationModal";
 import SearchDateModal from "./components/modal/SearchDateModal";
+import NotificationPage from "./pages/notific/NotificationPage";
 
 function App() {
   const Layout = () => {
@@ -64,6 +65,10 @@ function App() {
         {
           path: "/properties",
           element: <PropertiesPage />,
+        },
+        {
+          path: "/notification",
+          element: <NotificationPage />,
         },
       ],
     },

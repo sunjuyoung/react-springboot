@@ -5,10 +5,12 @@ import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../Avatar";
 
 import { Navigate, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../../state";
 import { toast } from "react-hot-toast";
 import { IoFastFood } from "react-icons/io5";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import newRequest, { getNotificationCount } from "../../utils/newRequest";
 
 const UserMenu = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +18,21 @@ const UserMenu = ({ user }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  const token = useSelector((state) => state?.token);
+
+  const {
+    isLoading,
+    isError,
+    data: notificationCount,
+    error,
+  } = useQuery(
+    ["notification", user?.id],
+    async () => await getNotificationCount(user?.id, token),
+    {
+      enabled: user?.id !== null,
+    }
+  );
 
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
@@ -38,6 +55,13 @@ const UserMenu = ({ user }) => {
     setIsOpen(() => false);
     navigate("/listingForm");
   }, []);
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+  // if (isLoading) {
+  //   return <span>Loading..</span>;
+  // }
 
   return (
     <div className="relative">
@@ -68,11 +92,16 @@ const UserMenu = ({ user }) => {
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
-            <div className="absolute top-0 right-0 items-center justify-center w-5 h-5 text-white rounded-full bg-rose-500">
-              <span className="absolute top-0.5 items-center justify-center text-xs right-2">
-                0
-              </span>
-            </div>
+            {user && token ? (
+              <div className="absolute top-0 right-0 items-center justify-center w-5 h-5 text-white rounded-full bg-rose-500">
+                <span className="absolute top-0.5 items-center justify-center text-xs right-2">
+                  {notificationCount}
+                </span>
+              </div>
+            ) : (
+              <></>
+            )}
+
             <Avatar />
           </div>
         </div>
@@ -99,7 +128,7 @@ const UserMenu = ({ user }) => {
                 <MenuItem
                   label="알림"
                   onClick={() => {
-                    userMenuToggle("/trips");
+                    userMenuToggle("/notification");
                     //navigate("/trips");
                   }}
                 />

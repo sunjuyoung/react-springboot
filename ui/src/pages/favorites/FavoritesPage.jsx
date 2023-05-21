@@ -40,7 +40,6 @@ const FavoritesPage = () => {
       </div>
     );
   }
-  console.log(favoriteList);
 
   return (
     <div

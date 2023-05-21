@@ -45,7 +45,6 @@ const TripPage = () => {
       </div>
     );
   }
-  console.log(reservations);
 
   return (
     <div

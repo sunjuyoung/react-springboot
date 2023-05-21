@@ -4,9 +4,11 @@ import { format } from "date-fns";
 import Button from "../Button";
 import { Navigate, useNavigate } from "react-router-dom";
 import HeartButton from "../HeartButton";
+import { useSelector } from "react-redux";
 
 const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state?.user);
 
   const reservationDate = useMemo(() => {
     if (!reservation) {
@@ -26,27 +28,6 @@ const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
     return `${format(start, "PP")} - ${format(end, "PP")}`;
   }, [data]);
 
-  // const handleCancel = useCallback(
-  //   (e) => {
-  //     e.stopPropagation();
-
-  //     if (disabled) {
-  //       return;
-  //     }
-
-  //     onAction?.(actionId);
-  //   },
-  //   [disabled, onAction, actionId]
-  // );
-
-  // const price = useMemo(() => {
-  //   if (reservation) {
-  //     return reservation.totalPrice;
-  //   }
-
-  //   return data.price;
-  // }, [reservation, data.price]);
-
   return (
     <div
       onClick={() => navigate(`/listing/${data.listing_id}`)}
@@ -59,9 +40,13 @@ const ListingCard = ({ data, currentUser, reservation, buttonLabel }) => {
             src={`images/listing/${data.image_src}`}
             alt="Listing"
           />
-          <div className="absolute top-5 right-5">
-            <HeartButton />
-          </div>
+          {parseInt(user?.id) !== data.user_id ? (
+            <div className="absolute cursor-pointer top-5 right-5">
+              <HeartButton listingId={data.listing_id} currentUser={user} />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <div className="text-lg font-semibold">{data.location}</div>
         <div className="font-light text-neutral-500">

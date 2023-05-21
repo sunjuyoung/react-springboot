@@ -88,6 +88,9 @@ const home = () => {
   if (status === "error") {
     return <span>Error: {error.message}</span>;
   }
+  if (!token || !user) {
+    navigatge("/login");
+  }
 
   if (!listings || (listings?.length === 0 && (category || locationValue))) {
     return (

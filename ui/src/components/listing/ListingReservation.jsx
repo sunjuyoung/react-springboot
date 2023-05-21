@@ -48,7 +48,7 @@ const ListingReservation = ({
 
       <hr />
       <div className="p-4">
-        <Button label="예약" onClick={onSubmit} />
+        <Button label="예약" onClick={onSubmit} disabled={disabled} />
       </div>
       <hr />
       <div className="flex flex-row items-center justify-between p-4 text-lg font-semibold ">

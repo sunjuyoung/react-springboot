@@ -25,6 +25,7 @@ const ListingPage = () => {
   const [totalPrice, setTotalPrice] = useState(1000);
   const reservations = [];
   const queryClient = useQueryClient();
+  const [disabled, setDisabled] = useState(true);
   const [dateRange, setDateRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -57,6 +58,7 @@ const ListingPage = () => {
         setTotalPrice(listing?.price);
       }
     }
+    setDisabled(parseInt(user?.id) === listing?.userId);
   }, [dateRange, listing]);
 
   //create reservation
@@ -101,7 +103,6 @@ const ListingPage = () => {
     return dates;
   };
 
-  console.log(listing);
   return (
     <div
       className="max-w-[2520px] mx-auto
@@ -141,9 +142,13 @@ xl:px-20 md:px-10 px-4 sm:px-2"
               </div>
             </div>
 
-            <div className="absolute top-5 right-5">
-              <HeartButton listingId={listing_id} currentUser={user} />
-            </div>
+            {!disabled ? (
+              <div className="absolute top-5 right-5">
+                <HeartButton listingId={listing.id} currentUser={user} />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
 
           <div className="grid grid-cols-1 mt-6 md:grid-cols-7 md:gap-10">
@@ -174,14 +179,18 @@ xl:px-20 md:px-10 px-4 sm:px-2"
                 startDate={listing.startDate}
                 endDate={listing.endDate}
                 onSubmit={onCreateReservation}
-                disabled={isLoading}
+                disabled={disabled}
                 disabledDates={disabledDates()}
               />
             </div>
           </div>
           <hr />
           {/* 리뷰 댓글 */}
-          <ListingReview listingId={listing_id} currentUser={user} />
+          <ListingReview
+            listingId={listing_id}
+            currentUser={user}
+            disabled={disabled}
+          />
 
           <hr />
 
