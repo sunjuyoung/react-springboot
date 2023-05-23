@@ -2,11 +2,9 @@ package com.example.airbnbApi.notification;
 
 import com.example.airbnbApi.notification.dto.ResponseNotificationDTO;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,4 +26,13 @@ public class NotificationController {
         long count =  notificationService.getNotificationCountByAccountId(accountId);
         return ResponseEntity.ok().body(count);
     }
+
+    @DeleteMapping("/{account_id}/{notification_id}")
+    public ResponseEntity<?> deleteNotification(@PathVariable("account_id")Integer accountId,
+                                                @PathVariable("notification_id")Integer notification_id){
+         notificationService.deleteNotification(accountId,notification_id);
+        return ResponseEntity.ok().body("success");
+    }
+
+
 }

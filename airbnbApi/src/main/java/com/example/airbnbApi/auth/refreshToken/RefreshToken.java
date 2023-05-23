@@ -2,13 +2,14 @@ package com.example.airbnbApi.auth.refreshToken;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-//@Getter
-//@Entity
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken {
 
     @Id

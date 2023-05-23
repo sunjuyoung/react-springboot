@@ -37,7 +37,7 @@ public class ListingService {
     private final ListingRepository listingRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final PhotoRepository photoRepository;
+  //  private final PhotoRepository photoRepository;
 
     private final ReservationRepository reservationRepository;
 
@@ -51,10 +51,10 @@ public class ListingService {
 
         Listing listing = Listing.createListing(account,registerListingDTO,categories);
         Listing newListing = listingRepository.save(listing);
-        if(registerListingDTO.getImgPath() != null && !registerListingDTO.getImgPath().equals("")){
-            Photo photo = new Photo(registerListingDTO.getUuid(), registerListingDTO.getImgPath(), null,newListing);
-            photoRepository.save(photo);
-        }
+//        if(registerListingDTO.getImgPath() != null && !registerListingDTO.getImgPath().equals("")){
+//            Photo photo = new Photo(registerListingDTO.getUuid(), registerListingDTO.getImgPath(), null,newListing);
+//            photoRepository.save(photo);
+//        }
     }
 
 

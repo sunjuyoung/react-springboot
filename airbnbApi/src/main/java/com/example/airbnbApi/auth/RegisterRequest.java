@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
 
@@ -24,4 +23,20 @@ public class RegisterRequest {
     @NotNull
     @Size(min = 4)
     private String password;
+
+    private String imagePath;
+
+
+    public RegisterRequest(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
+
+    public RegisterRequest(String email, String name, String password, String imagePath) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.imagePath = imagePath;
+    }
 }

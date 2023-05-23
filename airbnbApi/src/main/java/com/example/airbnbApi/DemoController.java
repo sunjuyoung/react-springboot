@@ -25,8 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DemoController {
 
-    private final PhotoService photoService;
-
 
     @Value("${airbnb.upload.path}")
     private String uploadPath;
@@ -34,19 +32,19 @@ public class DemoController {
 
 
 
-    @PostMapping
-    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
-        photoService.uploadImage(file);
-        return ResponseEntity.ok().body("success");
-    }
-
-    @GetMapping("/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable String fileName) throws IOException {
-        byte[] img = photoService.downloadImage(fileName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(img);
-    }
+//    @PostMapping
+//    public ResponseEntity<?> uploadImage(@RequestParam("image")MultipartFile file) throws IOException {
+//        photoService.uploadImage(file);
+//        return ResponseEntity.ok().body("success");
+//    }
+//
+//    @GetMapping("/{fileName}")
+//    public ResponseEntity<?> downloadImage(@PathVariable String fileName) throws IOException {
+//        byte[] img = photoService.downloadImage(fileName);
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .contentType(MediaType.valueOf("image/png"))
+//                .body(img);
+//    }
 
     @PostMapping(value = "/uploads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadPhotos(UploadDTO uploadDTO){
@@ -76,38 +74,6 @@ public class DemoController {
 
         return null;
     }
-
-//    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<?> upload(MultipartFile file){
-//
-//        if(file != null){
-//            //List<uploadResponse> list = new ArrayList<>();
-////            uploadDTO.files().forEach(multiFile->{
-//                String originalName = file.getOriginalFilename();
-//                String uuid = UUID.randomUUID().toString();
-//                String type  = file.getContentType();
-//
-//                Path savePath = Paths.get(uploadPath, uuid+"_"+ originalName);
-//
-//                try {
-//                    file.transferTo(savePath);
-//
-//                }catch (IOException e){
-//
-//                }
-//                //list.add(new uploadResponse(uuid,originalName));
-//                uploadResponse uploadImage = new uploadResponse(uuid,originalName,type);
-//
-//
-////            });
-//            return ResponseEntity.ok().body(uploadImage);
-//        }
-//
-//        return null;
-//    }
-
-
-
 
     record uploadResponse(
             String uuid,

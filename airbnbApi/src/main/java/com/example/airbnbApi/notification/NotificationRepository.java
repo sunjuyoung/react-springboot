@@ -9,4 +9,9 @@ public interface NotificationRepository extends JpaRepository<Notification,Integ
 
 
     Long countByAccount(Account account);
+
+
+    void deleteNotificationByIdAndAccount(Integer id, Account account);
+
+
 }

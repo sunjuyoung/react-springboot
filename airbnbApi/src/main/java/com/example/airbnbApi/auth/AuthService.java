@@ -8,8 +8,11 @@ import com.example.airbnbApi.user.UserRepository;
 
 import com.example.airbnbApi.user.mapper.UserMapper;
 import com.example.airbnbApi.user.vo.UserResponseVO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,16 +36,20 @@ public class AuthService   {
 
     private final UserMapper userMapper;
 
-    public void register(RegisterRequest request) {
+    public void register(RegisterRequest request,boolean social) {
         var user = Account.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.MEMBER)
+                .social(social)
+                .image(request.getImagePath())
                 .build();
         userRepository.save(user);
 
     }
+
+
 
 
 
@@ -72,7 +80,55 @@ public class AuthService   {
     }
 
 
-
+//    private void saveUserToken(User user, String jwtToken) {
+//        var token = Token.builder()
+//                .user(user)
+//                .token(jwtToken)
+//                .tokenType(TokenType.BEARER)
+//                .expired(false)
+//                .revoked(false)
+//                .build();
+//        tokenRepository.save(token);
+//    }
+//
+//    private void revokeAllUserTokens(User user) {
+//        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+//        if (validUserTokens.isEmpty())
+//            return;
+//        validUserTokens.forEach(token -> {
+//            token.setExpired(true);
+//            token.setRevoked(true);
+//        });
+//        tokenRepository.saveAll(validUserTokens);
+//    }
+//
+//    public void refreshToken(
+//            HttpServletRequest request,
+//            HttpServletResponse response) throws IOException {
+//
+//        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+//        final String refreshToken;
+//        final String userEmail;
+//        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+//            return;
+//        }
+//        refreshToken = authHeader.substring(7);
+//        userEmail = jwtService.extractUsername(refreshToken);
+//        if (userEmail != null) {
+//            var user = this.userRepository.findByEmail(userEmail)
+//                    .orElseThrow();
+//            if (jwtService.isTokenValid(refreshToken, user)) {
+//                var accessToken = jwtService.generateToken(user);
+//                revokeAllUserTokens(user);
+//                saveUserToken(user, accessToken);
+//                var authResponse = AuthenticationResponse.builder()
+//                        .accessToken(accessToken)
+//                        .refreshToken(refreshToken)
+//                        .build();
+//                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+//            }
+//        }
+//    }
 
 
 }

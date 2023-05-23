@@ -26,7 +26,7 @@ import java.util.UUID;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class CustomOAuthUserService extends DefaultOAuth2UserService {
 
 
     private final BCryptPasswordEncoder passwordEncoder;

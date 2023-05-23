@@ -35,18 +35,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull  FilterChain filterChain) throws ServletException, IOException, AccessTokenException {
-
+        if (request.getServletPath().contains("/api/v1/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authHeader = request.getHeader("Authorization");
-
+        String jwt = authHeader.substring(7);
+        String userEmail = jwtService.extractUsername(jwt);
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
-
-        String jwt = authHeader.substring(7);
-
-
-            String userEmail = jwtService.extractUsername(jwt);
             if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if(jwtService.isTokenValid(jwt,userDetails)){
@@ -61,8 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-
-
 
         filterChain.doFilter(request,response);
 

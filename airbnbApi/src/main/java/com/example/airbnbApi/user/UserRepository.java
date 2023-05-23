@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<Account,Integer>,UserRepos
     @EntityGraph(attributePaths = {"favorites"})
     Optional<Account> findByEmail(String email);
 
+    Optional<Account> findAccountByEmail(String email);
+
     boolean existsByName(String name);
 
     boolean existsByEmail(String email);
@@ -24,6 +26,7 @@ public interface UserRepository extends JpaRepository<Account,Integer>,UserRepos
 
     @Query("select a from Account a where a.id = :account_id")
     Account findOnlyId(@Param("account_id") int account_id);
+
 
 
 

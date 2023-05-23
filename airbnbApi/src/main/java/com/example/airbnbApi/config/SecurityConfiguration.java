@@ -62,12 +62,11 @@ public class SecurityConfiguration {
 
 
                 http.authorizeHttpRequests()
-                
                 .requestMatchers(HttpMethod.GET,"/swagger-ui/**")
                 .permitAll()
                 .requestMatchers(HttpMethod.POST,"/image/uploads")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST,"/api/v1/auth/**")
+                .requestMatchers("/api/v1/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -80,13 +79,11 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 
-        http.oauth2Login()
-                .loginPage("/login")
-
-
-                .successHandler(oAuth2SuccessHandler())
-                .userInfoEndpoint()
-                .userService(customOAuthUserService)
+//        http.oauth2Login()
+//
+//                .successHandler(oAuth2SuccessHandler())
+//                .userInfoEndpoint()
+//                .userService(customOAuthUserService)
         ;
 
 
