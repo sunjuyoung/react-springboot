@@ -40,23 +40,26 @@ public class CustomOAuthUserService extends DefaultOAuth2UserService {
         OAuth2User oauth2User = delegate.loadUser(userRequest);
 
 
-        Map<String,Object> attributes = oauth2User.getAttributes();
-        String email = (String) attributes.get("email");
-        String name = (String) attributes.get("name");
-        String picture = (String) attributes.get("picture");
-
-
-
-        Account user = userRepository.findByEmail(email)
-                //.map(entity -> entity.update(name))
-                .orElse(Account.builder()
-                        .name(name)
-                        .email(email)
-                        .image(picture)
-                        .password(passwordEncoder.encode("1234"))
-                        .role(Role.MEMBER)
-                        .build());
-        userRepository.save(user);
+        log.info(oauth2User.getAttributes());
+        log.info(oauth2User.getAttributes());
+//
+//        Map<String,Object> attributes = oauth2User.getAttributes();
+//        String email = (String) attributes.get("email");
+//        String name = (String) attributes.get("name");
+//        String picture = (String) attributes.get("picture");
+//
+//
+//
+//        Account user = userRepository.findByEmail(email)
+//                //.map(entity -> entity.update(name))
+//                .orElse(Account.builder()
+//                        .name(name)
+//                        .email(email)
+//                        .image(picture)
+//                        .password(passwordEncoder.encode("1234"))
+//                        .role(Role.MEMBER)
+//                        .build());
+//        userRepository.save(user);
 
 
         return oauth2User;

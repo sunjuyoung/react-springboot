@@ -1,8 +1,8 @@
 package com.example.airbnbApi.auth;
 
 
-import com.example.airbnbApi.auth.oauth.GetSocialOAuthResponse;
-import com.example.airbnbApi.auth.oauth.OauthService;
+
+import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.valid.RegisterValidation;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public class AuthController {
 
     private final AuthService service;
     private final RegisterValidation registerValidation;
-    private final OauthService oauthService;
+
     @InitBinder("registerRequest")
     public void initBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(registerValidation);
@@ -41,27 +41,13 @@ public class AuthController {
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().body(errors.getAllErrors());
         }
-        service.register(registerRequest,false);
+        service.register(registerRequest, false);
         return ResponseEntity.ok().body("success");
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request){
         return ResponseEntity.ok(service.authenticate(request));
-    }
-
-
-    @GetMapping("/google")
-    public void socialLoginRedirect() throws IOException {
-        oauthService.request();
-    }
-
-    @GetMapping("/google/callback")
-    public ResponseEntity<AuthResponse> socialLoginRedirect(@RequestParam(name = "code") String code)throws IOException{
-
-        System.out.println(">> 소셜 로그인 API 서버로부터 받은 code :"+ code);
-        AuthResponse authResponse = oauthService.oAuthLogin(code);
-        return ResponseEntity.ok().body(authResponse);
     }
 
 

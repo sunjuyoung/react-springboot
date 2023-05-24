@@ -4,7 +4,6 @@ package com.example.airbnbApi.config;
 import com.example.airbnbApi.auth.AuthService;
 import com.example.airbnbApi.auth.CustomOAuthUserService;
 import com.example.airbnbApi.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.example.airbnbApi.config.oauth.OAuth2SuccessHandler;
 import com.example.airbnbApi.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -37,78 +36,50 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@PropertySource("classpath:application-oauth.yml")
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    private final CustomOAuthUserService customOAuthUserService;
 
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http.csrf().disable()
                 .httpBasic().disable()
                 .formLogin().disable()
-                .logout().disable();
- ;
-        http
+                .logout().disable()
                 .cors(httpSecurityCorsConfigurer -> {
                     httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
-                });
-
+                })
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+ ;
 
                 http.authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET,"/swagger-ui/**")
                 .permitAll()
                 .requestMatchers(HttpMethod.POST,"/image/uploads")
                 .permitAll()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers(HttpMethod.POST,"/api/v1/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/v1/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
-                .and()
-
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 
-//        http.oauth2Login()
+//        ///api 시작하는  url 경우 401 상태 코드로 반환
+//        http.exceptionHandling()
 //
-//                .successHandler(oAuth2SuccessHandler())
-//                .userInfoEndpoint()
-//                .userService(customOAuthUserService)
-        ;
-
-
-
-        ///api 시작하는  url 경우 401 상태 코드로 반환
-        http.exceptionHandling()
-
-                .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                        new AntPathRequestMatcher("/api/**"));
+//                .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+//                        new AntPathRequestMatcher("/api/**"));
 
         return http.build();
 
-    }
-    @Bean
-    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
-    }
-
-    @Bean
-    public OAuth2SuccessHandler oAuth2SuccessHandler() {
-        return new OAuth2SuccessHandler(userRepository,
-                oAuth2AuthorizationRequestBasedOnCookieRepository(),
-                jwtService
-
-        );
     }
 
 

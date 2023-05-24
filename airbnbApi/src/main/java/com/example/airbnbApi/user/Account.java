@@ -6,10 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @Builder
@@ -32,7 +30,11 @@ public class Account  extends BaseTime {
     @Column(nullable = false)
     private String password;
 
-    private String emailVerified;
+    private boolean emailVerified;
+
+    private LocalDateTime emailCheckAt;
+
+    private String emailCheckToken;
 
     private String phoneNumber;
 
@@ -54,6 +56,12 @@ public class Account  extends BaseTime {
     )
     @Column(name = "favorite_listing_id")
     private Set<Integer> favorites = new HashSet<>();
+
+
+    public void generateToken() {
+        this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckAt = LocalDateTime.now();
+    }
 
 
 

@@ -1,6 +1,8 @@
 package com.example.airbnbApi.auth;
 
 import com.example.airbnbApi.config.JwtService;
+import com.example.airbnbApi.mail.EmailMessage;
+import com.example.airbnbApi.mail.EmailService;
 import com.example.airbnbApi.user.Account;
 import com.example.airbnbApi.user.Role;
 import com.example.airbnbApi.user.User;
@@ -20,6 +22,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.io.IOException;
 import java.util.*;
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthService   {
     private final UserRepository userRepository;
@@ -35,6 +41,10 @@ public class AuthService   {
     private final AuthenticationManager authenticationManager;
 
     private final UserMapper userMapper;
+
+    private final EmailService emailService;
+
+    private final TemplateEngine templateEngine;
 
     public void register(RegisterRequest request,boolean social) {
         var user = Account.builder()
@@ -45,11 +55,27 @@ public class AuthService   {
                 .social(social)
                 .image(request.getImagePath())
                 .build();
-        userRepository.save(user);
+        Account account = userRepository.save(user);
+        sendSignUpConfirmEmail(account);
 
     }
 
+    public void sendSignUpConfirmEmail(Account newAccount) {
+        Context context = new Context();
+        String link = "/check-email-token?token="+newAccount.getEmailCheckToken()+"&email="+newAccount.getEmail();
+        context.setVariable("link",link);
+        context.setVariable("nickname",newAccount.getName());
+        context.setVariable("linkName","이메일 인증하기");
+        context.setVariable("message","스터디 서비스를 사용하려면 링크를 클릭하세요");
 
+        String message = templateEngine.process("mail/email-confirm",context);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("회원 가입 인증")
+                .message(message)
+                .build();
+        emailService.sendEmail(emailMessage);
+    }
 
 
 
