@@ -63,6 +63,16 @@ public class Account  extends BaseTime {
         this.emailCheckAt = LocalDateTime.now();
     }
 
+    public void checkEmailToken(String token) {
+        if(this.emailCheckToken.equals(token) && checkConfirmEmailDate()){
+            this.emailVerified = true;
+        }
+    }
+    public boolean checkConfirmEmailDate() {
+        return this.emailCheckAt.isBefore(LocalDateTime.now().minusMinutes(15));
+    }
+
+
 
 
 }

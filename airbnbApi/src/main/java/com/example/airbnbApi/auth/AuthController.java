@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
 
 import java.io.IOException;
 
@@ -48,6 +49,19 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request){
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+
+    @GetMapping("/check-email/{token}/{email}")
+    public ResponseEntity<?> checkEmailConfirm(@PathVariable("token") String token,
+                                                          @PathVariable("email") String email){
+
+        log.info(token);
+        log.info(email);
+        String confirm = service.checkEmailConfirm(token, email);
+
+
+        return ResponseEntity.ok().body(confirm);
     }
 
 

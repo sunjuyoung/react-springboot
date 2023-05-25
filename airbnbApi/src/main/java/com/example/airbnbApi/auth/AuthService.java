@@ -1,6 +1,8 @@
 package com.example.airbnbApi.auth;
 
 import com.example.airbnbApi.config.JwtService;
+import com.example.airbnbApi.event.RegistrationCompleteEvent;
+import com.example.airbnbApi.event.RegistrationCompleteEventListener;
 import com.example.airbnbApi.mail.EmailMessage;
 import com.example.airbnbApi.mail.EmailService;
 import com.example.airbnbApi.user.Account;
@@ -14,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,11 +44,10 @@ public class AuthService   {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    private final UserMapper userMapper;
-
-    private final EmailService emailService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final TemplateEngine templateEngine;
+
 
     public void register(RegisterRequest request,boolean social) {
         var user = Account.builder()
@@ -55,28 +58,11 @@ public class AuthService   {
                 .social(social)
                 .image(request.getImagePath())
                 .build();
+        user.generateToken();
         Account account = userRepository.save(user);
-        sendSignUpConfirmEmail(account);
-
+        applicationEventPublisher.publishEvent(new RegistrationCompleteEvent(account));
+        //sendSignUpConfirmEmail(account);
     }
-
-    public void sendSignUpConfirmEmail(Account newAccount) {
-        Context context = new Context();
-        String link = "/check-email-token?token="+newAccount.getEmailCheckToken()+"&email="+newAccount.getEmail();
-        context.setVariable("link",link);
-        context.setVariable("nickname",newAccount.getName());
-        context.setVariable("linkName","이메일 인증하기");
-        context.setVariable("message","스터디 서비스를 사용하려면 링크를 클릭하세요");
-
-        String message = templateEngine.process("mail/email-confirm",context);
-        EmailMessage emailMessage = EmailMessage.builder()
-                .to(newAccount.getEmail())
-                .subject("회원 가입 인증")
-                .message(message)
-                .build();
-        emailService.sendEmail(emailMessage);
-    }
-
 
 
     public AuthResponse authenticate(AuthRequest request) {
@@ -105,6 +91,28 @@ public class AuthService   {
                 .build();
     }
 
+
+
+    public String checkEmailConfirm(String token, String email) {
+        Account account = userRepository.findByEmail(email).orElseThrow();
+        account.checkEmailToken(token);
+         return sendSignUpConfirmEmail(account);
+    }
+    public String sendSignUpConfirmEmail(Account account) {
+        Context context = new Context();
+        String link = "http://localhost:3001/";
+        context.setVariable("link",link);
+        context.setVariable("nickname",account.getName());
+        context.setVariable("linkName","홈페이지 이동");
+        if(account.isEmailVerified()){
+            context.setVariable("message","인증완료");
+        }else {
+            context.setVariable("message", "인증실패");
+        }
+        String message = templateEngine.process("mail/check-email-after",context);
+        return message;
+
+    }
 
 //    private void saveUserToken(User user, String jwtToken) {
 //        var token = Token.builder()

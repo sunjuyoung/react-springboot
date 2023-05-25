@@ -31,14 +31,14 @@ public class AirbnbApiApplication {
 
 
 
-	@Bean
-	ApplicationRunner applicationRunner(CategoryService categoryService, AuthService authService){
-		return args -> {
-			categoryService.createCategory();
-			authService.register(new RegisterRequest("test@test.com","test1","1234"),false);
-			authService.register(new RegisterRequest("test2@test.com","test2","1234"),false);
-			authService.authenticate(new AuthRequest("test@test.com","1234"));
-		};
-	}
+//	@Bean
+//	ApplicationRunner applicationRunner(CategoryService categoryService, AuthService authService){
+//		return args -> {
+//			categoryService.createCategory();
+//			authService.register(new RegisterRequest("test@test.com","test1","1234"),false);
+//			authService.register(new RegisterRequest("test2@test.com","test2","1234"),false);
+//			authService.authenticate(new AuthRequest("test@test.com","1234"));
+//		};
+//	}
 
 }
